@@ -111,3 +111,27 @@ git merge feature/название-функции
 ## Автор
 
 Проект разработан для изучения веб-разработки и работы с Git.
+
+
+# Просмотр статуса
+git status
+
+# Переключение между ветками
+git checkout master
+git checkout develop
+
+# Создание новой feature-ветки
+git checkout -b feature/new-feature
+
+# Добавление и коммит изменений
+git add .
+git commit -m "Описание изменений"
+
+# Отправка в GitHub
+git push origin develop
+
+# Просмотр истории коммитов
+git log --oneline
+
+# Слияние веток
+git merge develop
