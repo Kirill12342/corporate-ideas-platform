@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/signup.css">
+    <link rel="stylesheet" href="../css/burger-menu.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>registration</title>
+</head>
+<body>
+    <div class="mobile-nav">
+        <div class="burger-btn" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-menu-content">
+                <a href="../index.html" onclick="closeMobileMenu()">Главная</a>
+                <a href="contacts.html" onclick="closeMobileMenu()">Контакты</a>
+                <a href="about.html" onclick="closeMobileMenu()">О нас</a>
+                <a href="login.html" onclick="closeMobileMenu()">Войти</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="image">
+            <img src="../image/logo.png" alt="Логотип">
+        </div>
+        <div class="text">
+            <h1>Регистрация</h1>
+        </div>
+        <form action="register.php" method="post">
+            <div class="inputs">
+                <p>ФИО</p>
+                <input type="text" name="fullname" required> 
+
+                <p>Email</p>
+                <input type="email" name="email" required> 
+
+                <p>Пароль</p>
+                <input type="password" name="password" required> 
+
+                <p>Подтверждение пароля</p>
+                <input type="password" name="confirm_password" required> 
+            </div>
+            <div class="button_reg">
+                <button type="submit">Регистрация</button> 
+            </div>
+        </form>
+        <div class="home_button">
+            <button type="button" onclick="window.location.href='../index.html'">На главную</button>
+        </div>
+    </div>
+
+    
+    <script src="../js/burger-menu.js"></script>
+</body>
+</html>
+

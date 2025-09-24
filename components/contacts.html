@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/contacts.css">
+    <link rel="stylesheet" href="../css/burger-menu.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+    <div class="header">
+        <img src="../image/logo.png" alt="">
+        
+        <div class="burger-btn mobile-only" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <div class="desktop-only">
+            <button onclick="window.location.href='index.html'">На главную</button>
+        </div>
+        
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-menu-content">
+                <a href="../index.html" onclick="closeMobileMenu()">Главная</a>
+                <a href="about.html" onclick="closeMobileMenu()">О нас</a>
+                <a href="contacts.html" onclick="closeMobileMenu()">Контакты</a>
+                <a href="login.html" onclick="closeMobileMenu()">Вход</a>
+            </div>
+        </div>
+    </div>
+    <div class="text">
+        <h1>Контакты</h1>
+    </div>
+    <div class="conteiner">
+        <div class="forma">
+            <div class="form">
+                <h1>Форма обратной связи</h1>
+                <p>Проблемма</p>
+                <input type="text">
+                <p>Описание</p>
+                <input id="input_big" type="text">
+            </div>
+            <div class="form_buttons">
+                <div class="pril">
+                    <p>Приложение</p>
+                    <label class="file-upload-label" for="file-upload">
+                        <img src="../image/pril.png" alt="Прикрепить файл">
+                    </label>
+                    <input type="file" id="file-upload" name="file">
+                </div>
+                <div class="btn">
+                    <button>Отправить</button>
+                </div>
+            </div>
+        </div>
+        <div class="contacts">
+            <h1>Информация для связи</h1>
+            <p>телефон: 880055355</p>
+            <p>Email: teamJS@yadnex.ru</p>
+            <h1>Мы находимся здесь</h1>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2288.8883420202305!2d73.3717125979218!3d54.99259165132847!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sru!2sru!4v1758084795449!5m2!1sru!2sru"
+                width="800" height="550" style="border:0;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+    </div>
+    
+    <script src="../js/burger-menu.js"></script>
+</body>
+</html>

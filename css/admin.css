@@ -1,0 +1,563 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --color_black: #000000;
+    --color_button: #49AD09;
+    --color_white: #FFFFFF;
+    --color_background: #F5F5F5;
+    --color_rasmotrenie: #FFC400;
+    --color_prinat: #00FF6A;
+    --color_vrabote: #0022FF;
+    --color_otkloneno: #FF0000;
+    --color_backgroundFooter: #D9D9D9;
+    --color_bacgroundHeader: #777777;
+    --color_buttonRed:#ED2727;
+
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color_background);
+    font-family: "Inter", sans-serif;
+}
+
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 150px;
+    background-color: var(--color_bacgroundHeader);
+}
+
+.left_block {
+    display: flex;
+    flex-direction: row;
+    padding-left: 30px;
+    gap: 15px;
+    align-items: center;
+}
+
+.left_block p {
+    color: var(--color_white);
+    font-size: 24px;
+}
+
+.left_block button {
+    background: linear-gradient(135deg, var(--color_button), #3a8f07);
+    color: var(--color_white);
+    height: 64px;
+    width: 172px;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(73, 173, 9, 0.3);
+}
+
+.left_block button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(73, 173, 9, 0.4);
+    background: linear-gradient(135deg, #52c00a, var(--color_button));
+}
+
+.right-block {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    padding-right: 30px;
+}
+
+#out {
+    background: linear-gradient(135deg, var(--color_buttonRed), #c91e1e);
+    color: var(--color_white);
+    height: 64px;
+    width: 162px;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(237, 39, 39, 0.3);
+}
+
+#out:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(237, 39, 39, 0.4);
+    background: linear-gradient(135deg, #f53030, var(--color_buttonRed));
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+    height: 100%;
+    padding: 30px;
+
+}
+
+.text p {
+    font-size: 24px;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.text input {
+    height: 30px;
+    width: 300px;
+    border-radius: 20px;
+    background-color: var(--color_backgroundFooter);
+    border: 2px solid transparent;
+    outline: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.text input:focus {
+    border-color: var(--color_button);
+    background-color: var(--color_white);
+    box-shadow: 0 0 10px rgba(73, 173, 9, 0.2);
+}
+
+.text input::placeholder {
+    color: #666;
+    font-style: italic;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    padding: 140px 30px 30px 30px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 25px;
+    width: 100%;
+    min-height: 273px;
+    background-color: var(--color_white);
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.zag {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    padding-top: 15px;
+}
+
+.card-text {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 10px;
+}
+
+.card_btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card_btn button {
+    background: linear-gradient(135deg, var(--color_button), #3a8f07);
+    color: var(--color_white);
+    height: 64px;
+    width: 162px;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(73, 173, 9, 0.3);
+}
+
+.card_btn button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(73, 173, 9, 0.4);
+    background: linear-gradient(135deg, #52c00a, var(--color_button));
+}
+
+
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-color: rgba(73, 173, 9, 0.2);
+}
+
+.card h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.card p {
+    line-height: 1.5;
+    color: #555;
+    font-size: 14px;
+}
+
+.green {
+    color: var(--color_button);
+}
+
+.rasmotr {
+    color: var(--color_rasmotrenie);
+}
+
+.prinat {
+    color: var(--color_prinat);
+}
+
+.vrabote {
+    color: var(--color_vrabote);
+}
+
+.otkloneno {
+    color: var(--color_otkloneno);
+}
+
+
+
+.modal {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 400px;
+  height: 400px;
+  position: relative;
+  gap: 20px;
+}
+
+#status-select {
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: var(--color_white);
+    cursor: pointer;
+    width: 200px;
+    height: 40px;
+}
+
+#status-select:focus {
+    border-color: var(--color_button);
+    outline: none;
+}
+
+
+.modal-close {
+  position: absolute;
+  top: 10px; right: 15px;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+#save-status {
+    background-color: var(--color_button);
+    color: var(--color_white);
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#cancel-modal {
+    background-color: #f44336;
+    color: var(--color_white);
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+#cancel-modal:hover {
+    background-color: #d32f2f;
+}
+
+#admin-notes {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    resize: vertical;
+}
+
+#admin-notes:focus {
+    border-color: var(--color_button);
+    outline: none;
+}
+
+.modal-content label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+    color: #333;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 2px solid var(--color_button);
+    padding-bottom: 10px;
+}
+
+.modal-content p {
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.modal-content div[style*="margin-top"] {
+    margin-top: 20px !important;
+}
+
+/* Стили для интеграции бургер-меню */
+.mobile-only {
+    display: none;
+}
+
+.desktop-only {
+    display: flex;
+}
+
+/* МЕДИА-ЗАПРОСЫ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ */
+
+/* Планшеты и широкие экраны */
+@media screen and (max-width: 1400px) {
+    .cards {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .cards {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        padding: 50px 20px 30px 20px;
+    }
+}
+
+/* Планшеты и мобильные */
+@media screen and (max-width: 768px) {
+    /* Показываем бургер-меню на мобильных */
+    .mobile-only {
+        display: flex;
+    }
+    
+    .desktop-only {
+        display: none;
+    }
+    
+    /* Header */
+    .header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        height: auto;
+        padding: 15px 20px;
+        gap: 20px;
+    }
+    
+    .left_block {
+        flex-direction: column;
+        padding-left: 0;
+        gap: 15px;
+        align-items: center;
+    }
+    
+    .left_block p {
+        font-size: 20px;
+        text-align: center;
+    }
+    
+    .left_block button {
+        width: 150px;
+        height: 50px;
+        font-size: 18px;
+    }
+    
+    .right-block {
+        padding-right: 0;
+        gap: 15px;
+    }
+    
+    #out {
+        width: 130px;
+        height: 50px;
+        font-size: 18px;
+    }
+    
+    /* Контент */
+    .container {
+        padding: 15px;
+        padding-top: 30px;
+    }
+    
+    .text input {
+        width: 90%;
+        max-width: 300px;
+    }
+    
+    /* Карточки */
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 30px 15px;
+    }
+    
+    .card {
+        width: 100%;
+        height: auto;
+        min-height: 250px;
+    }
+    
+    .card_btn button {
+        width: 140px;
+        height: 50px;
+        font-size: 18px;
+    }
+    
+    /* Модальное окно */
+    .modal-content {
+        width: 90%;
+        max-width: 400px;
+        margin: 10% auto;
+        padding: 20px;
+    }
+    
+    .modal-content select, .modal-content textarea {
+        width: 100%;
+        font-size: 14px;
+    }
+    
+    .modal-buttons button {
+        width: 80px;
+        height: 35px;
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+}
+
+/* Мобильные устройства */
+@media screen and (max-width: 480px) {
+    .header {
+        padding: 15px;
+    }
+    
+    .left_block p {
+        font-size: 18px;
+    }
+    
+    .left_block button {
+        width: 130px;
+        height: 45px;
+        font-size: 16px;
+    }
+    
+    #out {
+        width: 110px;
+        height: 45px;
+        font-size: 16px;
+    }
+    
+    .container {
+        padding: 10px;
+    }
+    
+    .text input {
+        width: 95%;
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+    
+    .cards {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 20px 10px;
+    }
+    
+    .card {
+        padding: 15px;
+        font-size: 14px;
+    }
+    
+    .card_btn button {
+        width: 120px;
+        height: 45px;
+        font-size: 16px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+    }
+    
+    .modal-content h2 {
+        font-size: 18px;
+    }
+    
+    .modal-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .modal-buttons button {
+        width: 100%;
+        height: 40px;
+    }
+}

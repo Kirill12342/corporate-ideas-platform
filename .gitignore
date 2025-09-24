@@ -1,0 +1,33 @@
+# Системные файлы
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Временные файлы
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+
+# IDE файлы
+.vscode/
+.idea/
+*.suo
+*.user
+*.vcxproj.filters
+
+# Файлы логов
+*.log
+
+# Конфиденциальная информация (если будут добавлены)
+config.local.php
+.env
+.env.local
+
+# Резервные копии базы данных
+*.sql.bak
+*.sql.backup
+
+# Кэш браузера и временные файлы веб-сервера
+*.cache

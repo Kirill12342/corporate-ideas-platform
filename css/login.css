@@ -1,0 +1,232 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --color_black: #000000;
+    --color_button: #49AD09;
+    --color_white: #FFFFFF;
+    --color_background: #F5F5F5;
+    --color_rasmotrenie: #FFC400;
+    --color_prinat: #00FF6A;
+    --color_vrabote: #0022FF;
+    --color_backgroundFooter: #D9D9D9;
+
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color_background);
+    font-family: "Inter", sans-serif;
+}
+
+.conteiner {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+}
+
+.image img{
+    width: 250px;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+}
+
+.text {
+    font-size: 28px;
+    user-select: none;
+}
+
+.inputs  {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    user-select: none;
+}
+
+.inputs input {
+    height: 30px;
+    width: 500px;
+    border-radius: 20px;
+    background-color: var(--color_backgroundFooter);
+    border: 2px solid transparent;
+    outline: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.inputs input:focus {
+    border-color: var(--color_button);
+    background-color: var(--color_white);
+    box-shadow: 0 0 10px rgba(73, 173, 9, 0.2);
+}
+
+.inputs input::placeholder {
+    color: #666;
+    font-style: italic;
+}
+
+.button_reg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+}
+
+.button_reg button {
+    background: linear-gradient(135deg, var(--color_button), #3a8f07);
+    color: var(--color_white);
+    height: 64px;
+    width: 172px;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(73, 173, 9, 0.3);
+}
+
+.button_reg button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(73, 173, 9, 0.4);
+    background: linear-gradient(135deg, #52c00a, var(--color_button));
+}
+
+.button_reg button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(73, 173, 9, 0.3);
+}
+
+.inputs a {
+    text-decoration: none;
+    color: var(--color_black);
+    transition: 0.3;
+}
+
+.inputs a:hover {
+    color: var(--color_rasmotrenie);
+}
+
+/* Стили для кнопки "На главную" */
+.home_button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.home_button button {
+    background: linear-gradient(135deg, #6c757d, #5a6268);
+    color: var(--color_white);
+    height: 50px;
+    width: 150px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+}
+
+.home_button button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+    background: linear-gradient(135deg, #78858f, #6c757d);
+}
+
+/* Стили мобильной навигации */
+.mobile-nav {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1002;
+}
+
+/* МЕДИА-ЗАПРОСЫ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ */
+
+/* Планшеты */
+@media screen and (max-width: 768px) {
+    .conteiner {
+        padding: 20px;
+    }
+    
+    .image img {
+        width: 200px;
+    }
+    
+    .text {
+        font-size: 24px;
+    }
+    
+    .inputs input {
+        width: 90%;
+        max-width: 400px;
+    }
+    
+    .button_reg button {
+        width: 150px;
+        height: 50px;
+        font-size: 18px;
+    }
+    
+    .home_button button {
+        width: 130px;
+        height: 40px;
+        font-size: 14px;
+    }
+}
+
+/* Мобильные устройства */
+@media screen and (max-width: 480px) {
+    .conteiner {
+        padding: 15px;
+    }
+    
+    .image img {
+        width: 150px;
+    }
+    
+    .text {
+        font-size: 20px;
+    }
+    
+    .inputs {
+        gap: 20px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+    
+    .inputs input {
+        width: 95%;
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+    
+    .button_reg button {
+        width: 140px;
+        height: 45px;
+        font-size: 16px;
+    }
+    
+    .home_button button {
+        width: 120px;
+        height: 35px;
+        font-size: 12px;
+    }
+}
+
+
