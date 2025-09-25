@@ -41,6 +41,51 @@ if (!isset($_SESSION['user_id'])) {
             font-size: 16px;
         }
         
+        /* Стили для header и логотипа */
+        .header {
+            height: 150px;
+        }
+        
+        .header .left_block img {
+            height: 130px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        .header .left_block p {
+            display: none; /* Убираем белую надпись */
+        }
+        
+        .header .right-block {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .header .right-block button {
+            padding: 12px 20px;
+            background: var(--color_button, #49AD09);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header .right-block button:hover {
+            background: #3a8f07;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .header .right-block button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
         .filters-section {
             background: var(--color_white);
             padding: 20px;
@@ -235,6 +280,87 @@ if (!isset($_SESSION['user_id'])) {
             
             .filter-group {
                 width: 100%;
+            }
+            
+            /* Скрываем десктоп меню на мобильных */
+            .desktop-only {
+                display: none !important;
+            }
+            
+            /* Показываем бургер-меню на мобильных */
+            .mobile-only {
+                display: block !important;
+            }
+            
+            /* Увеличиваем логотип на мобильных */
+            .header .left_block img {
+                height: 100px;
+            }
+            
+
+        }
+        
+        /* Переопределяем стили бургер-меню для темного header */
+        .header .burger-btn {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-around !important;
+            width: 35px !important;
+            height: 35px !important;
+            padding: 6px !important;
+            background: rgba(255,255,255,0.1) !important;
+            border-radius: 6px !important;
+            margin-right: 30px !important;
+            cursor: pointer !important;
+        }
+        
+        .header .burger-btn:hover {
+            background: rgba(255,255,255,0.2) !important;
+        }
+        
+        .header .burger-btn span {
+            display: block !important;
+            background-color: #333 !important;
+            height: 3px !important;
+            width: 100% !important;
+            border-radius: 2px !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        /* Активное состояние бургера */
+        .header .burger-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px) !important;
+            background-color: #333 !important;
+        }
+        
+        .header .burger-btn.active span:nth-child(2) {
+            opacity: 0 !important;
+        }
+        
+        .header .burger-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px) !important;
+            background-color: #333 !important;
+        }
+        
+        /* Стили для мобильных устройств */
+        @media (max-width: 768px) {
+            .mobile-only {
+                display: flex !important;
+            }
+            
+            .desktop-only {
+                display: none !important;
+            }
+        }
+        
+        /* Стили для десктопа */
+        @media (min-width: 769px) {
+            .desktop-only {
+                display: flex !important;
+            }
+            
+            .mobile-only {
+                display: none !important;
             }
         }
     </style>

@@ -44,6 +44,12 @@ body {
     align-items: center;
 }
 
+.left_block img {
+    height: 120px;
+    width: auto;
+    object-fit: contain;
+}
+
 .left_block p {
     color: var(--color_white);
     font-size: 24px;
@@ -121,21 +127,30 @@ body {
 .right-block {
     display: flex;
     flex-direction: row;
-    gap: 30px;
+    gap: 15px;
     padding-right: 30px;
+}
+
+/* Общие стили для кнопок в header админки */
+.right-block button {
+    height: 64px;
+    padding: 0 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    min-width: 120px;
 }
 
 #out {
     background: linear-gradient(135deg, var(--color_buttonRed), #c91e1e);
     color: var(--color_white);
-    height: 64px;
-    width: 162px;
-    font-size: 22px;
-    font-weight: bold;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(237, 39, 39, 0.3);
 }
 
@@ -143,6 +158,19 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(237, 39, 39, 0.4);
     background: linear-gradient(135deg, #f53030, var(--color_buttonRed));
+}
+
+/* Кнопка "Топ идеи" в админке */
+.right-block button[onclick*="top_ideas"] {
+    background: linear-gradient(135deg, #ffc107, #ffb300);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+.right-block button[onclick*="top_ideas"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+    background: linear-gradient(135deg, #ffcd39, #ffc107);
 }
 
 .container {

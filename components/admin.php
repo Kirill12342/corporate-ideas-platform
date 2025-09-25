@@ -53,12 +53,14 @@
         </div>
         
         <div class="right-block desktop-only">
+            <button onclick="window.location.href='top_ideas.php'">🏆 Топ идеи</button>
             <button id="out">Выход</button>
         </div>
         
         <div class="mobile-menu" id="mobileMenu">
             <div class="mobile-menu-content">
                 <a href="../index.html" onclick="closeMobileMenu()">Главная</a>
+                <a href="top_ideas.php" onclick="closeMobileMenu()">🏆 Топ идеи</a>
                 <a href="idea.html" onclick="closeMobileMenu()">Подать идею</a>
                 <button onclick="window.location.href='logout.php'">Выйти</button>
             </div>

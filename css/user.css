@@ -44,6 +44,12 @@ body {
     align-items: center;
 }
 
+.left_block img {
+    height: 120px;
+    width: auto;
+    object-fit: contain;
+}
+
 .left_block p {
     color: var(--color_white);
     font-size: 24px;
@@ -72,21 +78,31 @@ body {
 .right-block {
     display: flex;
     flex-direction: row;
-    gap: 30px;
+    gap: 15px;
     padding-right: 30px;
 }
 
-#idea {
-    background: linear-gradient(135deg, var(--color_button), #3a8f07);
-    color: var(--color_white);
+/* Общие стили для кнопок в header */
+.right-block button {
     height: 64px;
-    width: 172px;
-    font-size: 22px;
-    font-weight: bold;
+    padding: 0 20px;
+    font-size: 16px;
+    font-weight: 600;
     border-radius: 10px;
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    min-width: 120px;
+}
+
+/* Кнопка "Подать идею" */
+#idea {
+    background: linear-gradient(135deg, var(--color_button), #3a8f07);
+    color: var(--color_white);
     box-shadow: 0 4px 15px rgba(73, 173, 9, 0.3);
 }
 
@@ -94,6 +110,32 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(73, 173, 9, 0.4);
     background: linear-gradient(135deg, #52c00a, var(--color_button));
+}
+
+/* Кнопка "Топ идеи" */
+.right-block button[onclick*="top_ideas"] {
+    background: linear-gradient(135deg, #ffc107, #ffb300);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+.right-block button[onclick*="top_ideas"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+    background: linear-gradient(135deg, #ffcd39, #ffc107);
+}
+
+/* Кнопка "Все идеи" */
+.right-block button[onclick*="user.php"] {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: var(--color_white);
+    box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+}
+
+.right-block button[onclick*="user.php"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(23, 162, 184, 0.4);
+    background: linear-gradient(135deg, #1fc8e3, #17a2b8);
 }
 
 #out {
