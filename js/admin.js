@@ -9,6 +9,7 @@
   let currentIdeaId = null;
   let currentIdeaData = null;
 
+  // Обработчики для кнопок "Подробнее"
   document.querySelectorAll('.card_btn button').forEach(button => {
     button.addEventListener('click', () => {
       const ideaData = JSON.parse(button.getAttribute('data-idea'));
@@ -34,6 +35,66 @@
     currentIdeaId = null;
     currentIdeaData = null;
   }
+
+  // Обработчик для кнопки удаления в модальном окне
+  const deleteBtn = document.getElementById('delete-idea');
+  deleteBtn.addEventListener('click', async () => {
+    if (!currentIdeaId || !currentIdeaData) return;
+    
+    const ideaTitle = currentIdeaData.title;
+    const authorName = currentIdeaData.fullname;
+    
+    if (confirm(`Вы уверены, что хотите удалить эту идею?\n\nИдея: ${ideaTitle}\nАвтор: ${authorName}\n\nЭто действие нельзя отменить!`)) {
+      try {
+        const response = await fetch('delete_idea.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            idea_id: currentIdeaId
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          // Находим карточку для удаления
+          const card = document.querySelector(`[data-idea-id="${currentIdeaId}"]`);
+          if (card) {
+            // Анимация удаления карточки
+            card.style.transition = 'all 0.3s ease-out';
+            card.style.opacity = '0';
+            card.style.transform = 'translateX(-100%)';
+            
+            setTimeout(() => {
+              card.remove();
+              
+              // Проверяем, остались ли карточки
+              const remainingCards = document.querySelectorAll('.card');
+              if (remainingCards.length === 0) {
+                const cardsContainer = document.querySelector('.cards');
+                cardsContainer.innerHTML = `
+                  <div class="no-ideas" style="text-align: center; padding: 40px; color: #666;">
+                    <h3>Нет идей для отображения</h3>
+                    <p>Пока никто не подал предложений.</p>
+                  </div>
+                `;
+              }
+            }, 300);
+          }
+          
+          alert(result.message || 'Идея успешно удалена');
+          closeModal();
+        } else {
+          alert('Ошибка при удалении: ' + result.error);
+        }
+      } catch (error) {
+        alert('Ошибка сети: ' + error.message);
+        console.error('Delete error:', error);
+      }
+    }
+  });
 
   closeBtn.addEventListener('click', closeModal);
   cancelBtn.addEventListener('click', closeModal);

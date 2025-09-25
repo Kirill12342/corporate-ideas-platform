@@ -204,6 +204,27 @@ body {
     background: linear-gradient(135deg, #52c00a, var(--color_button));
 }
 
+/* Стили для кнопки удаления в модальном окне */
+#delete-idea {
+    background: linear-gradient(135deg, var(--color_buttonRed), #c91e1e);
+    color: var(--color_white);
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(237, 39, 39, 0.3);
+    min-width: 120px;
+}
+
+#delete-idea:hover {
+    background: linear-gradient(135deg, #f53030, var(--color_buttonRed));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(237, 39, 39, 0.4);
+}
+
 
 
 .card:hover {
@@ -303,28 +324,59 @@ body {
 }
 
 #save-status {
-    background-color: var(--color_button);
+    background: linear-gradient(135deg, var(--color_button), #3a8f07);
     color: var(--color_white);
-    padding: 12px 24px;
+    padding: 12px 20px;
     font-size: 16px;
-    border-radius: 5px;
+    font-weight: bold;
+    border-radius: 8px;
     border: none;
     cursor: pointer;
     margin-right: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(73, 173, 9, 0.3);
+    min-width: 140px;
+}
+
+#save-status:hover {
+    background: linear-gradient(135deg, #52c00a, var(--color_button));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(73, 173, 9, 0.4);
 }
 
 #cancel-modal {
-    background-color: #f44336;
+    background: linear-gradient(135deg, #6c757d, #5a6268);
     color: var(--color_white);
-    padding: 12px 24px;
+    padding: 12px 20px;
     font-size: 16px;
-    border-radius: 5px;
+    font-weight: bold;
+    border-radius: 8px;
     border: none;
     cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(108, 117, 125, 0.3);
+    min-width: 100px;
 }
 
 #cancel-modal:hover {
-    background-color: #d32f2f;
+    background: linear-gradient(135deg, #5a6268, #495057);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+}
+
+/* Контейнер кнопок модального окна */
+.modal-buttons {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.modal-buttons button {
+    flex: 0 0 auto;
 }
 
 #admin-notes {

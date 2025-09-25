@@ -127,8 +127,9 @@
                 <label for="admin-notes"><strong>Комментарий администратора:</strong></label>
                 <textarea id="admin-notes" rows="4" cols="50" placeholder="Добавьте комментарий для пользователя..."></textarea>
             </div>
-            <div style="margin-top: 20px;">
-                <button id="save-status" style="margin-right: 10px;">Сохранить изменения</button>
+            <div class="modal-buttons">
+                <button id="save-status">Сохранить изменения</button>
+                <button id="delete-idea">Удалить идею</button>
                 <button id="cancel-modal">Отмена</button>
             </div>
         </div>
