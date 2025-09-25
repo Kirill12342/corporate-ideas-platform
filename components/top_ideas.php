@@ -1,3 +1,12 @@
+<?php
+session_start();
+require_once 'config.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.html?error=auth_required");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -231,16 +240,6 @@
     </style>
 </head>
 <body>
-    <?php
-    session_start();
-    require_once 'config.php';
-    
-    if (!isset($_SESSION['user_id'])) {
-        header("Location: login.html?error=auth_required");
-        exit();
-    }
-    ?>
-
     <div class="header">
         <div class="left_block">
             <img src="../image/logo2.png" alt="Logo">
