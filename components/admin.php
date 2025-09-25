@@ -75,6 +75,16 @@
         </div>
         <div class="cards">
             <?php
+            function getFileIcon($type) {
+                if (strpos($type, 'pdf') !== false) return '📄';
+                if (strpos($type, 'word') !== false) return '📝';
+                if (strpos($type, 'excel') !== false || strpos($type, 'spreadsheet') !== false) return '📊';
+                if (strpos($type, 'powerpoint') !== false || strpos($type, 'presentation') !== false) return '📈';
+                if (strpos($type, 'zip') !== false || strpos($type, 'rar') !== false) return '📦';
+                if (strpos($type, 'text') !== false) return '📃';
+                return '📄';
+            }
+            
             try {
                 $sql = "SELECT i.*, u.fullname, u.email 
                         FROM ideas i 
@@ -83,6 +93,22 @@
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 $ideas = $stmt->fetchAll();
+                
+                // Получаем файлы для всех идей
+                $attachments = [];
+                if (!empty($ideas)) {
+                    $idea_ids = array_column($ideas, 'id');
+                    $placeholders = str_repeat('?,', count($idea_ids) - 1) . '?';
+                    $attachSql = "SELECT * FROM idea_attachments WHERE idea_id IN ($placeholders) ORDER BY upload_date ASC";
+                    $attachStmt = $pdo->prepare($attachSql);
+                    $attachStmt->execute($idea_ids);
+                    $allAttachments = $attachStmt->fetchAll();
+                    
+                    // Группируем по idea_id
+                    foreach ($allAttachments as $attachment) {
+                        $attachments[$attachment['idea_id']][] = $attachment;
+                    }
+                }
                 
                 if (count($ideas) > 0):
                     foreach ($ideas as $idea):
@@ -109,6 +135,36 @@
                         <p><span class="green">Категория</span>: <?= htmlspecialchars($idea['category']) ?></p>
                         <p><span class="green">Статус</span>: <span class="<?= $statusClass ?>"><?= htmlspecialchars($idea['status']) ?></span></p>
                         <p><span class="green">Дата</span>: <?= date('d.m.Y H:i', strtotime($idea['created_at'])) ?></p>
+                        
+                        <?php if (isset($attachments[$idea['id']]) && !empty($attachments[$idea['id']])): ?>
+                        <div class="attachments-preview">
+                            <p><span class="green">Вложения</span>: <?= count($attachments[$idea['id']]) ?> файл(ов)</p>
+                            <div class="attachment-thumbnails">
+                                <?php 
+                                $shown = 0;
+                                foreach ($attachments[$idea['id']] as $attachment): 
+                                    if ($shown >= 3) break;
+                                    $isImage = strpos($attachment['file_type'], 'image/') === 0;
+                                ?>
+                                    <div class="attachment-thumb">
+                                        <?php if ($isImage): ?>
+                                            <img src="view_image.php?id=<?= $attachment['id'] ?>" 
+                                                 alt="<?= htmlspecialchars($attachment['original_name']) ?>"
+                                                 title="<?= htmlspecialchars($attachment['original_name']) ?>">
+                                        <?php else: ?>
+                                            <div class="file-icon-small"><?= getFileIcon($attachment['file_type']) ?></div>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php 
+                                    $shown++;
+                                endforeach; 
+                                if (count($attachments[$idea['id']]) > 3):
+                                ?>
+                                    <div class="more-files">+<?= count($attachments[$idea['id']]) - 3 ?></div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php endif; ?>
                     </div>
                     <div class="card_btn">
                         <button data-idea='<?= json_encode($idea) ?>'>Подробнее</button>
@@ -143,6 +199,10 @@
                 <p><strong>Описание:</strong> <span id="modal-description"></span></p>
                 <p><strong>Категория:</strong> <span id="modal-category"></span></p>
                 <p><strong>Дата подачи:</strong> <span id="modal-date"></span></p>
+                <div id="modal-attachments" class="modal-attachments" style="display: none;">
+                    <p><strong>Прикрепленные файлы:</strong></p>
+                    <div id="attachments-list" class="attachments-list"></div>
+                </div>
             </div>
             <div style="margin-top: 20px;">
                 <label for="status-select"><strong>Статус:</strong></label>

@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <form id="ideaForm" action="submit_idea.php" method="POST" class="conteiner">
+    <form id="ideaForm" action="submit_idea.php" method="POST" enctype="multipart/form-data" class="conteiner">
         <div class="image">
             <img src="../image/logo2.png" alt="">
         </div>
@@ -53,11 +53,17 @@
                 </select>
             </div>
             <div class="kategori_pril">
-                <p>Приложение (необязательно)</p>
-                <label class="file-upload-label" for="file-upload">
-                    <img src="../image/pril.png" alt="Прикрепить файл">
-                </label>
-                <input type="file" id="file-upload" name="attachment">
+                <p>Файловые вложения (необязательно)</p>
+                <div class="file-upload-container">
+                    <div class="file-drop-zone" id="fileDropZone">
+                        <img src="../image/pril.png" alt="Прикрепить файл">
+                        <p>Перетащите файлы сюда или нажмите для выбора</p>
+                        <span class="file-info">Поддерживаются: изображения, документы, архивы (макс. 10 МБ)</span>
+                    </div>
+                    <input type="file" id="file-upload" name="files[]" multiple 
+                           accept=".jpg,.jpeg,.png,.gif,.webp,.bmp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip,.rar">
+                    <div id="file-preview" class="file-preview"></div>
+                </div>
             </div>
         </div>
         <div class="button_otpr">

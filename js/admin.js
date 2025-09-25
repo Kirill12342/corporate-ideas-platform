@@ -26,6 +26,9 @@
       statusSelect.value = ideaData.status;
       adminNotesTextarea.value = ideaData.admin_notes || '';
 
+      // Загружаем файлы для этой идеи
+      loadIdeaAttachments(ideaData.id);
+
       modal.classList.remove('hidden');
     });
   });
@@ -273,4 +276,76 @@
 
   // Инициализация состояния кнопки очистки
   toggleClearButton();
+
+  // Функция для загрузки файлов идеи
+  function loadIdeaAttachments(ideaId) {
+    fetch(`get_attachments.php?idea_id=${ideaId}`)
+      .then(response => response.json())
+      .then(data => {
+        const attachmentsContainer = document.getElementById('modal-attachments');
+        const attachmentsList = document.getElementById('attachments-list');
+        
+        if (data.success && data.attachments.length > 0) {
+          attachmentsList.innerHTML = '';
+          
+          data.attachments.forEach(attachment => {
+            const attachmentItem = document.createElement('div');
+            attachmentItem.className = 'attachment-item';
+            
+            const isImage = attachment.file_type.startsWith('image/');
+            
+            if (isImage) {
+              attachmentItem.innerHTML = `
+                <img src="${attachment.file_path}" alt="${attachment.original_name}">
+                <div class="file-name">${attachment.original_name}</div>
+                <div class="file-size">${formatFileSize(attachment.file_size)}</div>
+                <button class="download-btn" onclick="downloadFile(${attachment.id})">Скачать</button>
+              `;
+            } else {
+              attachmentItem.innerHTML = `
+                <div class="file-icon">${getFileIconJs(attachment.file_type)}</div>
+                <div class="file-name">${attachment.original_name}</div>
+                <div class="file-size">${formatFileSize(attachment.file_size)}</div>
+                <button class="download-btn" onclick="downloadFile(${attachment.id})">Скачать</button>
+              `;
+            }
+            
+            attachmentsList.appendChild(attachmentItem);
+          });
+          
+          attachmentsContainer.style.display = 'block';
+        } else {
+          attachmentsContainer.style.display = 'none';
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка при загрузке файлов:', error);
+        document.getElementById('modal-attachments').style.display = 'none';
+      });
+  }
+
+  // Функция для скачивания файла
+  window.downloadFile = function(attachmentId) {
+    window.open(`download_file.php?id=${attachmentId}`, '_blank');
+  };
+
+  // Функция получения иконки файла
+  function getFileIconJs(type) {
+    if (type.includes('pdf')) return '📄';
+    if (type.includes('word')) return '📝';
+    if (type.includes('excel') || type.includes('spreadsheet')) return '📊';
+    if (type.includes('powerpoint') || type.includes('presentation')) return '📈';
+    if (type.includes('zip') || type.includes('rar')) return '📦';
+    if (type.includes('text')) return '📃';
+    return '📄';
+  }
+
+  // Функция форматирования размера файла
+  function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
 });
