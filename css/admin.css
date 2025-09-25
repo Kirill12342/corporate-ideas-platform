@@ -69,6 +69,55 @@ body {
     background: linear-gradient(135deg, #52c00a, var(--color_button));
 }
 
+/* Стили для выпадающих списков фильтров */
+.left_block select {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    color: var(--color_black);
+    height: 64px;
+    min-width: 180px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid #dee2e6;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 0 15px;
+}
+
+.left_block select:hover {
+    border-color: var(--color_button);
+    box-shadow: 0 6px 20px rgba(73, 173, 9, 0.2);
+    transform: translateY(-2px);
+}
+
+.left_block select:focus {
+    outline: none;
+    border-color: var(--color_button);
+    box-shadow: 0 0 0 3px rgba(73, 173, 9, 0.1);
+}
+
+/* Кнопка сброса фильтров */
+#reset-filters {
+    background: linear-gradient(135deg, #6c757d, #5a6268);
+    color: var(--color_white);
+    height: 64px;
+    min-width: 160px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+}
+
+#reset-filters:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+    background: linear-gradient(135deg, #5a6268, #495057);
+}
+
 .right-block {
     display: flex;
     flex-direction: row;
@@ -379,6 +428,41 @@ body {
     flex: 0 0 auto;
 }
 
+/* Анимация для фильтрации карточек */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Стили для сообщения "нет результатов" */
+.no-results-filter {
+    grid-column: 1 / -1;
+    margin: 20px 0;
+}
+
+.no-results-filter div {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 2px dashed #dee2e6;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.no-results-filter h3 {
+    color: #495057;
+    margin-bottom: 10px;
+}
+
+.no-results-filter p {
+    color: #6c757d;
+    font-style: italic;
+}
+
 #admin-notes {
     width: 100%;
     padding: 10px;
@@ -477,10 +561,18 @@ body {
         text-align: center;
     }
     
-    .left_block button {
+    .left_block button, .left_block select {
         width: 150px;
         height: 50px;
-        font-size: 18px;
+        font-size: 16px;
+        min-width: auto;
+    }
+    
+    #reset-filters {
+        width: 140px;
+        height: 50px;
+        font-size: 16px;
+        min-width: auto;
     }
     
     .right-block {
@@ -555,10 +647,22 @@ body {
         font-size: 18px;
     }
     
-    .left_block button {
+    .left_block button, .left_block select {
         width: 130px;
         height: 45px;
-        font-size: 16px;
+        font-size: 14px;
+        min-width: auto;
+    }
+    
+    #reset-filters {
+        width: 120px;
+        height: 45px;
+        font-size: 14px;
+        min-width: auto;
+    }
+    
+    .left_block {
+        gap: 10px;
     }
     
     #out {
@@ -611,5 +715,77 @@ body {
     .modal-buttons button {
         width: 100%;
         height: 40px;
+    }
+}
+
+/* Стили для поиска */
+.search-label {
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.search-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+#search-input {
+    width: 100%;
+    padding: 10px 40px 10px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+#search-input:focus {
+    outline: none;
+    border-color: var(--color_button);
+    box-shadow: 0 0 0 3px rgba(73, 173, 9, 0.1);
+}
+
+.clear-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #999;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.clear-btn:hover {
+    background-color: #f0f0f0;
+    color: #666;
+}
+
+.search-container.has-text .clear-btn {
+    opacity: 1;
+    visibility: visible;
+}
+
+@media (max-width: 768px) {
+    .search-container {
+        max-width: 100%;
+    }
+    
+    #search-input {
+        font-size: 16px;
     }
 }

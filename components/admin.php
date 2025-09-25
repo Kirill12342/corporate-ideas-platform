@@ -15,8 +15,35 @@
     <div class="header">
         <div class="left_block">
             <p>Фильтровать:</p>
-            <button>По Категориям</button>
-            <button>По статусу</button>
+            <select id="category-filter">
+                <option value="">Все категории</option>
+                <?php
+                try {
+                    $categorySql = "SELECT DISTINCT category FROM ideas WHERE category IS NOT NULL AND category != '' ORDER BY category ASC";
+                    $categoryStmt = $pdo->prepare($categorySql);
+                    $categoryStmt->execute();
+                    $categories = $categoryStmt->fetchAll();
+                    
+                    foreach ($categories as $cat):
+                ?>
+                    <option value="<?= htmlspecialchars($cat['category']) ?>"><?= htmlspecialchars($cat['category']) ?></option>
+                <?php 
+                    endforeach;
+                } catch (PDOException $e) {
+                    // Обработка ошибки, но не прерываем работу страницы
+                }
+                ?>
+            </select>
+            
+            <select id="status-filter">
+                <option value="">Все статусы</option>
+                <option value="На рассмотрении">На рассмотрении</option>
+                <option value="Принято">Принято</option>
+                <option value="В работе">В работе</option>
+                <option value="Отклонено">Отклонено</option>
+            </select>
+            
+            <button id="reset-filters">Сбросить фильтры</button>
         </div>
         
         <div class="burger-btn mobile-only" onclick="toggleMobileMenu()">
@@ -40,8 +67,11 @@
     <div class="container">
         <div class="text">
             <h1>Управление идеями</h1>
-            <p>Поиск</p>
-            <input type="text" id="search-input" placeholder="Поиск по названию или категории...">
+            <p class="search-label">Поиск</p>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Поиск по названию, категории, описанию или автору...">
+                <button id="clear-search" class="clear-btn" title="Очистить поиск">✕</button>
+            </div>
         </div>
         <div class="cards">
             <?php
@@ -72,7 +102,7 @@
                                 break;
                         }
             ?>
-                <div class="card" data-idea-id="<?= $idea['id'] ?>">
+                <div class="card" data-idea-id="<?= $idea['id'] ?>" data-category="<?= htmlspecialchars($idea['category']) ?>" data-status="<?= htmlspecialchars($idea['status']) ?>">
                     <div class="zag"><p>Предложение #<?= $idea['id'] ?> от <?= htmlspecialchars($idea['fullname']) ?></p></div>
                     <div class="card-text">
                         <p><span class="green">Идея</span>: <?= htmlspecialchars($idea['title']) ?></p>
