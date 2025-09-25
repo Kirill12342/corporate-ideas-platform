@@ -302,7 +302,6 @@ if (!isset($_SESSION['user_id'])) {
         
         /* Переопределяем стили бургер-меню для темного header */
         .header .burger-btn {
-            display: flex !important;
             flex-direction: column !important;
             justify-content: space-around !important;
             width: 35px !important;
@@ -348,6 +347,10 @@ if (!isset($_SESSION['user_id'])) {
                 display: flex !important;
             }
             
+            .header .burger-btn {
+                display: flex !important;
+            }
+            
             .desktop-only {
                 display: none !important;
             }
@@ -359,7 +362,7 @@ if (!isset($_SESSION['user_id'])) {
                 display: flex !important;
             }
             
-            .mobile-only {
+            .mobile-only, .header .burger-btn {
                 display: none !important;
             }
         }
