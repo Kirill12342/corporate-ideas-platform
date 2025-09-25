@@ -89,7 +89,7 @@
                 $sql = "SELECT i.*, u.fullname, u.email 
                         FROM ideas i 
                         JOIN users u ON i.user_id = u.id 
-                        ORDER BY i.created_at DESC";
+                        ORDER BY i.total_score DESC, i.likes_count DESC, i.created_at DESC";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 $ideas = $stmt->fetchAll();
@@ -135,6 +135,21 @@
                         <p><span class="green">Категория</span>: <?= htmlspecialchars($idea['category']) ?></p>
                         <p><span class="green">Статус</span>: <span class="<?= $statusClass ?>"><?= htmlspecialchars($idea['status']) ?></span></p>
                         <p><span class="green">Дата</span>: <?= date('d.m.Y H:i', strtotime($idea['created_at'])) ?></p>
+                        
+                        <!-- Рейтинг и голосование -->
+                        <div class="rating-stats">
+                            <span class="likes-count">
+                                <i class="like-icon">👍</i> <?= $idea['likes_count'] ?? 0 ?>
+                            </span>
+                            <span class="dislikes-count">
+                                <i class="dislike-icon">👎</i> <?= $idea['dislikes_count'] ?? 0 ?>
+                            </span>
+                            <?php if (($idea['likes_count'] ?? 0) > 0 || ($idea['dislikes_count'] ?? 0) > 0): ?>
+                            <span class="popularity-rank">
+                                <i class="star-icon">⭐</i> <?= round($idea['popularity_rank'] ?? 0, 1) ?>%
+                            </span>
+                            <?php endif; ?>
+                        </div>
                         
                         <?php if (isset($attachments[$idea['id']]) && !empty($attachments[$idea['id']])): ?>
                         <div class="attachments-preview">

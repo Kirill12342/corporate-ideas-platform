@@ -605,6 +605,147 @@ body {
     font-weight: bold;
 }
 
+/* Стили для системы голосования */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.author-info {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+}
+
+.my-idea-badge {
+    background: var(--color_button);
+    color: var(--color_white);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.voting-section {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.voting-buttons {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.vote-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    background: var(--color_white);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+}
+
+.vote-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.like-btn {
+    border-color: #28a745;
+}
+
+.like-btn:hover {
+    background: #f8f9fa;
+    border-color: #28a745;
+    color: #28a745;
+}
+
+.like-btn.active {
+    background: #28a745;
+    color: var(--color_white);
+    border-color: #28a745;
+}
+
+.dislike-btn {
+    border-color: #dc3545;
+}
+
+.dislike-btn:hover {
+    background: #f8f9fa;
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.dislike-btn.active {
+    background: #dc3545;
+    color: var(--color_white);
+    border-color: #dc3545;
+}
+
+.vote-icon {
+    font-size: 16px;
+}
+
+.vote-count {
+    font-weight: bold;
+    min-width: 16px;
+    text-align: center;
+}
+
+.popularity-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+}
+
+.popularity-rank {
+    color: #ffc107;
+    font-weight: 500;
+}
+
+.own-idea-stats {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.stats-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: #666;
+    font-weight: 500;
+}
+
+.like-icon {
+    color: #28a745;
+}
+
+.dislike-icon {
+    color: #dc3545;
+}
+
+.star-icon {
+    color: #ffc107;
+}
+
 @media (max-width: 768px) {
     .attachment-thumbnails {
         gap: 6px;
@@ -617,5 +758,23 @@ body {
     
     .file-icon-small {
         font-size: 20px;
+    }
+    
+    .voting-buttons {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .vote-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    
+    .own-idea-stats {
+        gap: 10px;
+    }
+    
+    .stats-item {
+        font-size: 12px;
     }
 }

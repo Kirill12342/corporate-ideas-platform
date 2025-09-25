@@ -53,6 +53,7 @@
         </div>
         
         <div class="right-block desktop-only">
+            <button onclick="window.location.href='top_ideas.php'">🏆 Топ идеи</button>
             <button id="idea">Подать идею</button>
             <button id="out">Выход</button>
         </div>
@@ -60,6 +61,7 @@
         <div class="mobile-menu" id="mobileMenu">
             <div class="mobile-menu-content">
                 <a href="../index.html" onclick="closeMobileMenu()">Главная</a>
+                <a href="top_ideas.php" onclick="closeMobileMenu()">🏆 Топ идеи</a>
                 <a href="idea.html" onclick="closeMobileMenu()">Подать идею</a>
                 <button onclick="window.location.href='logout.php'">Выйти</button>
             </div>
@@ -67,7 +69,7 @@
     </div>
     <div class="container">
         <div class="text">
-            <h1>Мои предложения</h1>
+            <h1>Все идеи сотрудников</h1>
             <?php if (isset($_GET['success'])): ?>
                 <div class="success-message" style="color: green; margin: 10px 0; padding: 10px; background: #e8f5e8; border-radius: 5px;">
                     <?= htmlspecialchars($_GET['success']) ?>
@@ -92,7 +94,12 @@
             }
             
             try {
-                $sql = "SELECT * FROM ideas WHERE user_id = ? ORDER BY created_at DESC";
+                // Показываем все идеи с информацией о голосах текущего пользователя
+                $sql = "SELECT i.*, u.fullname, u.email,
+                        (SELECT vote_type FROM idea_votes WHERE idea_id = i.id AND user_id = ?) as user_vote
+                        FROM ideas i 
+                        JOIN users u ON i.user_id = u.id 
+                        ORDER BY i.total_score DESC, i.likes_count DESC, i.created_at DESC";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([$_SESSION['user_id']]);
                 $ideas = $stmt->fetchAll();
@@ -131,12 +138,57 @@
                                 break;
                         }
             ?>
-                <div class="card" data-category="<?= htmlspecialchars($idea['category']) ?>" data-status="<?= htmlspecialchars($idea['status']) ?>">
+                <div class="card" data-idea-id="<?= $idea['id'] ?>" data-category="<?= htmlspecialchars($idea['category']) ?>" data-status="<?= htmlspecialchars($idea['status']) ?>">
+                    <div class="card-header">
+                        <span class="author-info">От: <?= htmlspecialchars($idea['fullname']) ?></span>
+                        <?php if ($idea['user_id'] == $_SESSION['user_id']): ?>
+                            <span class="my-idea-badge">Моя идея</span>
+                        <?php endif; ?>
+                    </div>
                     <p><span class="green">Идея</span>: <?= htmlspecialchars($idea['title']) ?></p>
                     <p><span class="green">Описание</span>: <?= nl2br(htmlspecialchars($idea['description'])) ?></p>
                     <p><span class="green">Категория</span>: <?= htmlspecialchars($idea['category']) ?></p>
                     <p><span class="green">Статус</span>: <span class="<?= $statusClass ?>"><?= htmlspecialchars($idea['status']) ?></span></p>
                     <p><span class="green">Дата подачи</span>: <?= date('d.m.Y H:i', strtotime($idea['created_at'])) ?></p>
+                    
+                    <!-- Система голосования -->
+                    <?php if ($idea['user_id'] != $_SESSION['user_id']): // Не показывать голосование для собственных идей ?>
+                    <div class="voting-section">
+                        <div class="voting-buttons">
+                            <button class="vote-btn like-btn <?= ($idea['user_vote'] === 'like') ? 'active' : '' ?>" 
+                                    data-idea-id="<?= $idea['id'] ?>" data-vote-type="like">
+                                <span class="vote-icon">👍</span>
+                                <span class="vote-count"><?= $idea['likes_count'] ?? 0 ?></span>
+                            </button>
+                            <button class="vote-btn dislike-btn <?= ($idea['user_vote'] === 'dislike') ? 'active' : '' ?>" 
+                                    data-idea-id="<?= $idea['id'] ?>" data-vote-type="dislike">
+                                <span class="vote-icon">👎</span>
+                                <span class="vote-count"><?= $idea['dislikes_count'] ?? 0 ?></span>
+                            </button>
+                        </div>
+                        <?php if (($idea['likes_count'] ?? 0) > 0 || ($idea['dislikes_count'] ?? 0) > 0): ?>
+                        <div class="popularity-info">
+                            <span class="popularity-rank">
+                                <i class="star-icon">⭐</i> <?= round($idea['popularity_rank'] ?? 0, 1) ?>% популярность
+                            </span>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php else: ?>
+                    <div class="own-idea-stats">
+                        <span class="stats-item">
+                            <i class="like-icon">👍</i> <?= $idea['likes_count'] ?? 0 ?> лайков
+                        </span>
+                        <span class="stats-item">
+                            <i class="dislike-icon">👎</i> <?= $idea['dislikes_count'] ?? 0 ?> дизлайков
+                        </span>
+                        <?php if (($idea['likes_count'] ?? 0) > 0 || ($idea['dislikes_count'] ?? 0) > 0): ?>
+                        <span class="stats-item">
+                            <i class="star-icon">⭐</i> <?= round($idea['popularity_rank'] ?? 0, 1) ?>%
+                        </span>
+                        <?php endif; ?>
+                    </div>
+                    <?php endif; ?>
                     
                     <?php if (isset($attachments[$idea['id']]) && !empty($attachments[$idea['id']])): ?>
                     <div class="attachments-preview">
