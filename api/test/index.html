@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Tester - Corporate Ideas Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #49ad07 0%, #3a8f07 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .auth-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #49ad07 0%, #3a8f07 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(73, 173, 9, 0.3);
+        }
+        
+        .test-section {
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .endpoint-selector {
+            display: grid;
+            grid-template-columns: 1fr 3fr 1fr;
+            gap: 10px;
+            align-items: end;
+            margin-bottom: 15px;
+        }
+        
+        .response-container {
+            background: #212529;
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .token-display {
+            background: #e9f7ef;
+            border: 1px solid #49ad07;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            word-break: break-all;
+        }
+        
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .success {
+            color: #155724;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 API Tester</h1>
+            <p>Инструмент для тестирования Corporate Ideas Platform REST API</p>
+        </div>
+        
+        <div class="content">
+            <!-- Секция аутентификации -->
+            <div class="auth-section">
+                <h2>🔐 Аутентификация</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <h3>Вход в систему</h3>
+                        <div class="form-group">
+                            <label>Имя пользователя:</label>
+                            <input type="text" id="loginUsername" value="testuser" placeholder="Введите имя пользователя">
+                        </div>
+                        <div class="form-group">
+                            <label>Пароль:</label>
+                            <input type="password" id="loginPassword" value="password123" placeholder="Введите пароль">
+                        </div>
+                        <button onclick="login()">Войти</button>
+                    </div>
+                    
+                    <div>
+                        <h3>Регистрация</h3>
+                        <div class="form-group">
+                            <label>Имя пользователя:</label>
+                            <input type="text" id="regUsername" placeholder="Новое имя пользователя">
+                        </div>
+                        <div class="form-group">
+                            <label>Пароль:</label>
+                            <input type="password" id="regPassword" placeholder="Пароль">
+                        </div>
+                        <div class="form-group">
+                            <label>Подтверждение пароля:</label>
+                            <input type="password" id="regConfirmPassword" placeholder="Повторите пароль">
+                        </div>
+                        <button onclick="register()">Регистрация</button>
+                    </div>
+                </div>
+                
+                <div id="tokenDisplay" class="token-display" style="display: none;">
+                    <strong>JWT Token:</strong>
+                    <div id="tokenValue"></div>
+                </div>
+            </div>
+
+            <!-- Секция тестирования API -->
+            <div class="test-section">
+                <h2>📡 Тестирование API Endpoints</h2>
+                
+                <div class="endpoint-selector">
+                    <div>
+                        <label>HTTP Метод:</label>
+                        <select id="httpMethod">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="DELETE">DELETE</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label>Endpoint URL:</label>
+                        <input type="text" id="endpointUrl" placeholder="/ideas" value="/ideas">
+                    </div>
+                    
+                    <div>
+                        <button onclick="sendRequest()">Отправить</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>JSON Body (для POST/PUT запросов):</label>
+                    <textarea id="requestBody" rows="6" placeholder='{"title": "Новая идея", "description": "Описание идеи", "category": "Технологии"}'></textarea>
+                </div>
+                
+                <div>
+                    <h3>Быстрые тесты:</h3>
+                    <button onclick="quickTest('GET', '/ideas')">Получить все идеи</button>
+                    <button onclick="quickTest('GET', '/ideas/top')">Топ идеи</button>
+                    <button onclick="quickTest('GET', '/ideas/my')">Мои идеи</button>
+                    <button onclick="quickTest('GET', '/users/profile')">Мой профиль</button>
+                    <button onclick="testCreateIdea()">Создать тестовую идею</button>
+                    <button onclick="testVoting()">Тестировать голосование</button>
+                </div>
+            </div>
+
+            <!-- Секция ответа -->
+            <div class="test-section">
+                <h2>📋 Ответ сервера</h2>
+                <div id="responseContainer" class="response-container">
+                    Здесь появится ответ от сервера...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentToken = '';
+        const baseUrl = '/praktica_popov/api/v1';
+        
+        // Функция для отображения ответа
+        function displayResponse(response, status) {
+            const container = document.getElementById('responseContainer');
+            const statusColor = status >= 200 && status < 300 ? '#28a745' : '#dc3545';
+            container.innerHTML = `<div style="color: ${statusColor}; margin-bottom: 10px;">Status: ${status}</div>${JSON.stringify(response, null, 2)}`;
+        }
+        
+        // Функция для отображения ошибки
+        function displayError(error) {
+            const container = document.getElementById('responseContainer');
+            container.innerHTML = `<div style="color: #dc3545;">Error: ${error}</div>`;
+        }
+        
+        // Вход в систему
+        async function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const response = await fetch(`${baseUrl}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                displayResponse(data, response.status);
+                
+                if (data.success && data.data && data.data.token) {
+                    currentToken = data.data.token;
+                    document.getElementById('tokenDisplay').style.display = 'block';
+                    document.getElementById('tokenValue').textContent = currentToken;
+                }
+            } catch (error) {
+                displayError(error.message);
+            }
+        }
+        
+        // Регистрация
+        async function register() {
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            
+            try {
+                const response = await fetch(`${baseUrl}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password,
+                        confirm_password: confirmPassword
+                    })
+                });
+                
+                const data = await response.json();
+                displayResponse(data, response.status);
+                
+                if (data.success && data.data && data.data.token) {
+                    currentToken = data.data.token;
+                    document.getElementById('tokenDisplay').style.display = 'block';
+                    document.getElementById('tokenValue').textContent = currentToken;
+                }
+            } catch (error) {
+                displayError(error.message);
+            }
+        }
+        
+        // Отправка запроса
+        async function sendRequest() {
+            const method = document.getElementById('httpMethod').value;
+            const url = document.getElementById('endpointUrl').value;
+            const body = document.getElementById('requestBody').value;
+            
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            
+            if (currentToken) {
+                options.headers['Authorization'] = `Bearer ${currentToken}`;
+            }
+            
+            if (method === 'POST' || method === 'PUT') {
+                if (body.trim()) {
+                    try {
+                        JSON.parse(body); // Валидация JSON
+                        options.body = body;
+                    } catch (e) {
+                        displayError('Некорректный JSON в теле запроса');
+                        return;
+                    }
+                }
+            }
+            
+            try {
+                const response = await fetch(`${baseUrl}${url}`, options);
+                const data = await response.json();
+                displayResponse(data, response.status);
+            } catch (error) {
+                displayError(error.message);
+            }
+        }
+        
+        // Быстрый тест
+        function quickTest(method, endpoint) {
+            document.getElementById('httpMethod').value = method;
+            document.getElementById('endpointUrl').value = endpoint;
+            sendRequest();
+        }
+        
+        // Тест создания идеи
+        function testCreateIdea() {
+            const testIdea = {
+                title: "Тестовая идея " + new Date().getTime(),
+                description: "Это тестовая идея, созданная через API тестер для проверки функциональности создания новых идей.",
+                category: "Технологии"
+            };
+            
+            document.getElementById('httpMethod').value = 'POST';
+            document.getElementById('endpointUrl').value = '/ideas';
+            document.getElementById('requestBody').value = JSON.stringify(testIdea, null, 2);
+            sendRequest();
+        }
+        
+        // Тест голосования
+        async function testVoting() {
+            // Сначала получим список идей
+            try {
+                const response = await fetch(`${baseUrl}/ideas?limit=1`, {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+                const data = await response.json();
+                
+                if (data.success && data.data.items.length > 0) {
+                    const ideaId = data.data.items[0].id;
+                    
+                    // Голосуем за первую идею
+                    const voteBody = { vote_type: "like" };
+                    
+                    document.getElementById('httpMethod').value = 'POST';
+                    document.getElementById('endpointUrl').value = `/ideas/${ideaId}/vote`;
+                    document.getElementById('requestBody').value = JSON.stringify(voteBody, null, 2);
+                    sendRequest();
+                } else {
+                    displayError('Нет идей для голосования. Создайте сначала идею.');
+                }
+            } catch (error) {
+                displayError(error.message);
+            }
+        }
+        
+        // Установка примеров в поля при загрузке
+        window.onload = function() {
+            // Можно добавить дополнительную инициализацию
+        };
+    </script>
+</body>
+</html>
