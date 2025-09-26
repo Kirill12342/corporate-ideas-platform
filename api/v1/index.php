@@ -249,6 +249,93 @@ $router->addRoute('GET', '/ideas/{id}/votes', function($id) {
     $controller->getVotes($id);
 });
 
+// === МАРШРУТЫ ДЛЯ ФАЙЛОВЫХ ВЛОЖЕНИЙ ===
+require_once 'controllers/AttachmentsController.php';
+
+// POST /attachments - загрузка файла
+$router->addRoute('POST', '/attachments', function() {
+    $controller = new AttachmentsController();
+    $controller->uploadAttachment();
+});
+
+// GET /attachments/{id} - получение информации о вложении
+$router->addRoute('GET', '/attachments/{id}', function($id) {
+    $controller = new AttachmentsController();
+    $controller->getAttachment($id);
+});
+
+// GET /attachments/{id}/download - скачивание файла
+$router->addRoute('GET', '/attachments/{id}/download', function($id) {
+    $controller = new AttachmentsController();
+    $controller->downloadAttachment($id);
+});
+
+// DELETE /attachments/{id} - удаление вложения
+$router->addRoute('DELETE', '/attachments/{id}', function($id) {
+    $controller = new AttachmentsController();
+    $controller->deleteAttachment($id);
+});
+
+// GET /ideas/{id}/attachments - получение всех вложений идеи
+$router->addRoute('GET', '/ideas/{id}/attachments', function($id) {
+    $controller = new AttachmentsController();
+    $controller->getIdeaAttachments($id);
+});
+
+// === МАРШРУТЫ ДЛЯ УВЕДОМЛЕНИЙ ===
+require_once 'controllers/NotificationsController.php';
+
+// GET /notifications - получение уведомлений пользователя
+$router->addRoute('GET', '/notifications', function() {
+    $controller = new NotificationsController();
+    $controller->getNotifications();
+});
+
+// POST /notifications/{id}/read - отметить уведомление как прочитанное
+$router->addRoute('POST', '/notifications/{id}/read', function($id) {
+    $controller = new NotificationsController();
+    $controller->markAsRead($id);
+});
+
+// POST /notifications/read-all - отметить все уведомления как прочитанные
+$router->addRoute('POST', '/notifications/read-all', function() {
+    $controller = new NotificationsController();
+    $controller->markAllAsRead();
+});
+
+// GET /notifications/unread-count - получение количества непрочитанных уведомлений
+$router->addRoute('GET', '/notifications/unread-count', function() {
+    $controller = new NotificationsController();
+    $controller->getUnreadCount();
+});
+
+// DELETE /notifications/{id} - удаление уведомления
+$router->addRoute('DELETE', '/notifications/{id}', function($id) {
+    $controller = new NotificationsController();
+    $controller->deleteNotification($id);
+});
+
+// === МАРШРУТЫ ДЛЯ REAL-TIME ФУНКЦИЙ ===
+require_once 'controllers/RealtimeController.php';
+
+// GET /realtime/notifications - SSE поток уведомлений
+$router->addRoute('GET', '/realtime/notifications', function() {
+    $controller = new RealtimeController();
+    $controller->streamNotifications();
+});
+
+// GET /realtime/ideas - SSE поток обновлений идей
+$router->addRoute('GET', '/realtime/ideas', function() {
+    $controller = new RealtimeController();
+    $controller->streamIdeasUpdates();
+});
+
+// GET /realtime/votes - SSE поток обновлений голосов
+$router->addRoute('GET', '/realtime/votes', function() {
+    $controller = new RealtimeController();
+    $controller->streamVotesUpdates();
+});
+
 // Обработка запросов
 $router->route();
 ?>
