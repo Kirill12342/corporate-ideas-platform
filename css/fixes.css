@@ -1,0 +1,477 @@
+/* Исправления для анимаций и UI элементов */
+
+/* Отключаем параллакс эффект который вызывает проблемы */
+.conteiner_2 img, 
+.conteiner_3 img {
+    transition: none !important;
+    transform: none !important;
+    will-change: auto !important;
+}
+
+/* Фиксируем z-index для правильного отображения слоев */
+.conteiner_1 {
+    position: relative;
+    z-index: 3;
+}
+
+.conteiner_2 {
+    position: relative;
+    z-index: 2;
+    background-color: var(--color_background);
+}
+
+.conteiner_3 {
+    position: relative;
+    z-index: 1;
+    background-color: var(--color_background);
+}
+
+/* Исправляем размеры кнопок для правильного размещения текста */
+.nav button {
+    background: linear-gradient(135deg, var(--color_button), #3a8f07);
+    color: var(--color_white);
+    height: 64px;
+    min-width: 180px; /* Увеличиваем минимальную ширину */
+    width: auto; /* Позволяем кнопке адаптироваться под контент */
+    padding: 0 20px; /* Добавляем внутренние отступы */
+    font-size: 20px; /* Немного уменьшаем шрифт */
+    font-weight: bold;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(73, 173, 9, 0.3);
+    white-space: nowrap; /* Запрещаем перенос текста */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.nav button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(73, 173, 9, 0.4);
+    background: linear-gradient(135deg, #52c00a, var(--color_button));
+}
+
+/* Исправляем кнопку "Подать идею" */
+.btn_idea button {
+    background: linear-gradient(135deg, var(--color_button), #3a8f07);
+    color: var(--color_white);
+    height: 80px; /* Увеличиваем высоту */
+    min-width: 250px; /* Увеличиваем ширину */
+    width: auto;
+    padding: 0 30px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 25px rgba(73, 173, 9, 0.3);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 0 auto; /* Центрируем кнопку */
+}
+
+.btn_idea button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 30px rgba(73, 173, 9, 0.5);
+    background: linear-gradient(135deg, #52c00a, var(--color_button));
+}
+
+/* Исправляем анимации чтобы они не конфликтовали */
+.animate-fade-in-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-fade-in-down {
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInDown 0.6s ease-out forwards;
+}
+
+.animate-fade-in-left {
+    opacity: 0;
+    transform: translateX(-30px);
+    animation: fadeInLeft 0.6s ease-out forwards;
+}
+
+.animate-fade-in-right {
+    opacity: 0;
+    transform: translateX(30px);
+    animation: fadeInRight 0.6s ease-out forwards;
+}
+
+.animate-zoom-in {
+    opacity: 0;
+    transform: scale(0.8);
+    animation: zoomIn 0.6s ease-out forwards;
+}
+
+.animate-bounce-in {
+    opacity: 0;
+    transform: scale(0.3);
+    animation: bounceIn 0.8s ease-out forwards;
+}
+
+/* Переопределяем keyframes с правильными значениями */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes zoomIn {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Улучшаем hover эффекты без конфликтов */
+.hover-lift:hover {
+    transform: translateY(-2px) !important;
+    transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05) !important;
+    transition: transform 0.2s ease;
+}
+
+/* Фиксируем мобильное меню */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 300px;
+    height: 100vh;
+    background-color: var(--color_white);
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
+    z-index: 1000;
+}
+
+.mobile-menu.active {
+    right: 0;
+}
+
+.mobile-menu-content {
+    padding: 80px 30px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.mobile-menu-content a,
+.mobile-menu-content button {
+    padding: 15px 20px;
+    text-decoration: none;
+    color: var(--color_black);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: none;
+    background: var(--color_background);
+    cursor: pointer;
+    font-size: 18px;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.mobile-menu-content a:hover,
+.mobile-menu-content button:hover {
+    background-color: var(--color_button);
+    color: var(--color_white);
+    transform: translateX(5px);
+}
+
+/* Responsive улучшения */
+@media (max-width: 768px) {
+    .nav {
+        display: none; /* Скрываем десктопное меню на мобильных */
+    }
+    
+    .burger-btn {
+        display: block;
+        margin-right: 20px;
+    }
+    
+    .btn_idea button {
+        height: 70px;
+        min-width: 200px;
+        font-size: 20px;
+        padding: 0 20px;
+    }
+    
+    .conteiner_2,
+    .conteiner_3 {
+        padding-left: 20px;
+        padding-right: 20px;
+        gap: 50px;
+    }
+    
+    .conteiner_2 {
+        flex-direction: column;
+        padding-top: 50px;
+    }
+    
+    .conteiner_3 {
+        padding-top: 100px;
+        padding-bottom: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo img {
+        width: 200px;
+    }
+    
+    .btn_idea button {
+        height: 60px;
+        min-width: 180px;
+        font-size: 18px;
+    }
+    
+    .conteiner_2 img,
+    .conteiner_3 img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+/* Фиксируем уведомления */
+.notification-count {
+    background-color: #ff4444;
+    color: white;
+    border-radius: 50%;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    min-width: 18px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Исправления для кнопок на странице идей */
+.button_otpr button {
+    background-color: var(--color_button) !important;
+    color: var(--color_white) !important;
+    height: 74px !important;
+    min-width: 220px !important; /* Увеличиваем минимальную ширину */
+    width: auto !important;
+    padding: 0 25px !important; /* Добавляем отступы */
+    font-size: 20px !important; /* Немного уменьшаем шрифт */
+    font-weight: bold !important;
+    border-radius: 10px !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0px 100px 80px rgba(49, 49, 49, 0.1) !important;
+    transition: all 0.3s ease !important;
+    white-space: nowrap !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+.button_otpr button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0px 120px 100px rgba(49, 49, 49, 0.15) !important;
+    background: linear-gradient(135deg, #52c00a, var(--color_button)) !important;
+}
+
+.back_button button {
+    background-color: #6c757d !important;
+    color: var(--color_white) !important;
+    height: 60px !important;
+    min-width: 150px !important;
+    width: auto !important;
+    padding: 0 20px !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    border-radius: 10px !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    white-space: nowrap !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+.back_button button:hover {
+    transform: translateY(-2px) !important;
+    background-color: #5a6268 !important;
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4) !important;
+}
+
+/* Улучшаем читаемость */
+.nav {
+    position: relative;
+}
+
+.nav button {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Плавная анимация при загрузке */
+.header, 
+.conteiner_1, 
+.conteiner_2, 
+.conteiner_3 {
+    animation-fill-mode: both;
+}
+
+/* Принудительно отключаем проблемные анимации */
+.conteiner_2 img, 
+.conteiner_3 img,
+.conteiner_2 *,
+.conteiner_3 * {
+    transform: none !important;
+    will-change: auto !important;
+}
+
+/* Фиксируем overflow для предотвращения наложения */
+.conteiner_1,
+.conteiner_2,
+.conteiner_3 {
+    overflow: visible !important;
+    position: relative !important;
+    background-color: var(--color_background) !important;
+}
+
+/* Принудительно исправляем размеры всех кнопок */
+button,
+.btn,
+input[type="submit"],
+input[type="button"] {
+    min-width: max-content !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    box-sizing: border-box !important;
+}
+
+/* Особые исправления для навигации */
+.nav button,
+.mobile-menu-content button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+/* Исправляем мобильное меню */
+.burger-btn {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1001;
+}
+
+.burger-btn span {
+    width: 25px;
+    height: 3px;
+    background-color: var(--color_black);
+    margin: 3px 0;
+    transition: 0.3s;
+    border-radius: 2px;
+}
+
+/* Показываем бургер только на мобильных */
+@media (max-width: 768px) {
+    .burger-btn {
+        display: flex;
+    }
+    
+    .desktop-nav {
+        display: none !important;
+    }
+}
+
+/* Убираем конфликты z-index */
+.toast-container {
+    z-index: 10000;
+}
+
+.loading-overlay {
+    z-index: 9999;
+}
+
+/* Дополнительная защита от наложений */
+body {
+    overflow-x: hidden;
+}
+
+.header {
+    background-color: var(--color_background);
+    position: relative;
+    z-index: 100;
+}
+
+/* Финальные исправления анимаций */
+* {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.animate-fade-in-up.completed,
+.animate-fade-in-down.completed,
+.animate-zoom-in.completed,
+.animate-bounce-in.completed {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+}
