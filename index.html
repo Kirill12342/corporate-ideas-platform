@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="image/logo.png" alt="">
+        </div>
+        
+        <div class="burger-btn" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <div class="nav desktop-nav">
+            <a href="components/contacts.html">Контакты</a>
+            <a href="components/about.html">О нас</a>
+            <a href="components/login.html">Войти</a>
+            <button onclick="window.location.href='components/signup.html'">Регистрация</button>
+        </div>
+        
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-menu-content">
+                <a href="components/contacts.html" onclick="closeMobileMenu()">Контакты</a>
+                <a href="components/about.html" onclick="closeMobileMenu()">О нас</a>
+                <a href="components/login.html" onclick="closeMobileMenu()">Войти</a>
+                <button onclick="window.location.href='components/signup.html'">Регистрация</button>
+            </div>
+        </div>
+    </div>
+    <div class="conteiner_1">
+        <div class="idea">
+            <img src="image/logo2.png" alt="">
+        </div>
+        <div class="btn_idea">
+            <button onclick="window.location.href='./components/idea.html'">Подать идею</button>
+        </div>
+
+    </div>
+    <div class="conteiner_2">
+        <img src="image/prosto.png" alt="">
+        <img src="image/prozrachno.png" alt="">
+        <img src="image/polezno.png" alt="">
+    </div>
+    <div class="conteiner_3">
+        <div class="text">
+            <h1>Последние предложения</h1>
+        </div>
+        <div class="cards">
+            <div class="card">
+                <p><span class="green">Идея</span>: Ввести гибкий график работы.</p>
+                <p><span class="green">Описание</span>: Возможность <br> выбирать время начала <br> рабочего дня (с 8 до 10 утра) <br> повысит продуктивность и <br> снизит стресс.</p>
+                <p><span class="green">Категория</span>: Рабочие процессы.</p>
+                <p><span class="green">Статус</span>: <span id="rasmotr">На рассмотрении</span>.</p>
+            </div>
+            <div class="card">
+                <p><span class="green">Идея</span>: Установить фильтр для воды на <br> кухне.</p>
+                <p><span class="green">Описание</span>: Это улучшит <br> условия для сотрудников и <br> сэкономит средства на <br> бутылированной воде.</p>
+                <p><span class="green">Категория</span>: Офис.</p>
+                <p><span class="green">Статус</span>: <span id="prinat">Принято</span>.</p>
+            </div>
+            <div class="card">
+                <p><span class="green">Идея</span>: Создать корпоративное <br> мобильное предложение.</p>
+                <p><span class="green">Описание</span>: В приложении <br> можно будет отслеживать <br> новости компании <br> подавать заявки и <br> получать уведомления.</p>
+                <p><span class="green">Категория</span>: IT-сервисы.</p>
+                <p><span class="green">Статус</span>: <span id="vrabote">В работе</span>.</p>
+            </div>
+        </div>
+    </div>
+    <div class="cta-section">
+        <div class="cta-content">
+            <h2>Присоединяйтесь к нашей команде!</h2>
+            <p>Регистрируйтесь и делитесь своими идеями для улучшения рабочего процесса</p>
+            <div class="cta-buttons">
+                <button onclick="window.location.href='components/signup.html'" class="cta-register">Зарегистрироваться</button>
+                <button onclick="window.location.href='components/login.html'" class="cta-login">Войти в аккаунт</button>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="footer_image">
+            <img src="image/logo.png" alt="">
+        </div>
+        <div class="footer_text">
+            <div class="contacts">
+                <a href="">Контакты</a> <a href="">О нас</a>
+            </div>
+            <p>@2025 TeamJS produced</p>
+        </div>
+        <div class="footer_social">
+            <div class="social">
+                <img src="image/instagram.png" alt="">
+                <img src="image/watsapp.png" alt="">
+                <img src="image/vk.png" alt="">
+                <img src="image/telegram.png" alt="">
+            </div>
+            <p>Support: teamJS@yandex.ru</p>
+        </div>
+    </div>
+
+    <script src="js/burger-menu.js"></script>
+</body>
+</html>

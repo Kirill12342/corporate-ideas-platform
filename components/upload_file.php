@@ -137,6 +137,6 @@ function formatFileSize($size) {
         $unit_index++;
     }
     
-    return round($size, 2) . ' upload_file.php' . $units[$unit_index];
+    return round($size, 2) . ' ' . $units[$unit_index];
 }
 ?>

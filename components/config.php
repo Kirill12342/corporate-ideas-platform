@@ -1,8 +1,8 @@
 <?php
-$host = 'db';
+$host = '127.0.0.1';
 $user = 'root';
-$pass = '7JH-Ek2-P96-ngB';
-$dbname = 'stuffVoice';
+$pass = '';
+$dbname = 'stuffVoise';
 
 try {
     $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
