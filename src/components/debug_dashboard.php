@@ -15,13 +15,13 @@ try {
         echo "<li><strong>" . $col['Field'] . "</strong> (" . $col['Type'] . ")</li>";
     }
     echo "</ul>";
-    
+
     // 2. Проверим количество записей
     echo "<h3>2. Количество записей:</h3>";
     $stmt = $pdo->query("SELECT COUNT(*) as count FROM ideas");
     $count = $stmt->fetch()['count'];
     echo "В таблице ideas: <strong>$count</strong> записей<br>";
-    
+
     // 3. Если есть записи, покажем первые 3
     if ($count > 0) {
         echo "<h3>3. Примеры записей:</h3>";
@@ -42,10 +42,10 @@ try {
         }
         echo "</table>";
     }
-    
+
     // 4. Проверим API напрямую
     echo "<h3>4. Тест API analytics.php:</h3>";
-    
+
     // Симулируем POST запрос
     $_POST = [
         'action' => 'ideas_table',
@@ -53,17 +53,17 @@ try {
         'limit' => 5
     ];
     $_SERVER['REQUEST_METHOD'] = 'POST';
-    
+
     // Включаем аналитику
     ob_start();
     include 'analytics.php';
     $apiResponse = ob_get_clean();
-    
+
     echo "Ответ API: <br>";
     echo "<pre style='background: #f5f5f5; padding: 10px; border: 1px solid #ddd;'>";
     echo htmlspecialchars($apiResponse);
     echo "</pre>";
-    
+
     // Проверим валидность JSON
     $decoded = json_decode($apiResponse, true);
     if ($decoded) {
@@ -77,7 +77,7 @@ try {
     } else {
         echo "<p>❌ JSON невалиден: " . json_last_error_msg() . "</p>";
     }
-    
+
 } catch (Exception $e) {
     echo "<p style='color: red;'>Ошибка: " . $e->getMessage() . "</p>";
 }

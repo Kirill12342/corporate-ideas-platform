@@ -34,15 +34,15 @@ class NotificationsController
 
             // Получаем уведомления
             $sql = "
-                SELECT n.*, 
-                       CASE 
+                SELECT n.*,
+                       CASE
                            WHEN n.related_type = 'idea' THEN i.title
                            WHEN n.related_type = 'vote' THEN CONCAT('Голос за идею: ', i2.title)
-                           ELSE NULL 
+                           ELSE NULL
                        END as related_title,
-                       CASE 
+                       CASE
                            WHEN n.sender_id IS NOT NULL THEN u.username
-                           ELSE NULL 
+                           ELSE NULL
                        END as sender_username
                 FROM notifications n
                 LEFT JOIN ideas i ON n.related_type = 'idea' AND n.related_id = i.id
@@ -195,7 +195,7 @@ class NotificationsController
         try {
             $db = APIDatabase::getConnection();
 
-            $sql = "INSERT INTO notifications (user_id, type, title, message, related_type, related_id, sender_id, created_at) 
+            $sql = "INSERT INTO notifications (user_id, type, title, message, related_type, related_id, sender_id, created_at)
                     VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
 
             $stmt = $db->prepare($sql);

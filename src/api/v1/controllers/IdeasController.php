@@ -70,7 +70,7 @@ class IdeasController
 
             // Получение данных
             $sql = "
-                SELECT 
+                SELECT
                     i.id,
                     i.title,
                     i.description,
@@ -130,7 +130,7 @@ class IdeasController
 
         try {
             $sql = "
-                SELECT 
+                SELECT
                     i.id,
                     i.title,
                     i.description,
@@ -143,7 +143,7 @@ class IdeasController
                     i.popularity_rank,
                     u.username as author_name,
                     u.id as author_id,
-                    CASE 
+                    CASE
                         WHEN v.vote_type = 'like' THEN 1
                         WHEN v.vote_type = 'dislike' THEN -1
                         ELSE 0
@@ -208,7 +208,7 @@ class IdeasController
 
         try {
             $sql = "
-                INSERT INTO ideas (user_id, title, description, category, status, created_at, updated_at) 
+                INSERT INTO ideas (user_id, title, description, category, status, created_at, updated_at)
                 VALUES (:user_id, :title, :description, :category, 'pending', NOW(), NOW())
             ";
 
@@ -391,8 +391,8 @@ class IdeasController
         try {
             // Подсчет общего количества
             $count_sql = "
-                SELECT COUNT(*) as total 
-                FROM ideas i 
+                SELECT COUNT(*) as total
+                FROM ideas i
                 WHERE i.status = 'approved' $date_condition
             ";
             $count_stmt = $this->db->prepare($count_sql);
@@ -401,7 +401,7 @@ class IdeasController
 
             // Получение топ идей
             $sql = "
-                SELECT 
+                SELECT
                     i.id,
                     i.title,
                     i.description,
@@ -457,7 +457,7 @@ class IdeasController
 
             // Получение моих идей
             $sql = "
-                SELECT 
+                SELECT
                     id,
                     title,
                     description,

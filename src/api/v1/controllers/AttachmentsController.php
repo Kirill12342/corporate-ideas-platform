@@ -90,7 +90,7 @@ class AttachmentsController
             }
 
             // Сохраняем информацию в БД
-            $sql = "INSERT INTO attachments (idea_id, user_id, original_name, filename, file_path, file_size, mime_type, created_at) 
+            $sql = "INSERT INTO attachments (idea_id, user_id, original_name, filename, file_path, file_size, mime_type, created_at)
                     VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
 
             $stmt = $this->db->prepare($sql);
@@ -108,9 +108,9 @@ class AttachmentsController
 
             // Получаем полную информацию о вложении
             $stmt = $this->db->prepare("
-                SELECT a.*, u.username 
-                FROM attachments a 
-                JOIN users u ON a.user_id = u.id 
+                SELECT a.*, u.username
+                FROM attachments a
+                JOIN users u ON a.user_id = u.id
                 WHERE a.id = ?
             ");
             $stmt->execute([$attachmentId]);
@@ -134,8 +134,8 @@ class AttachmentsController
             // Получаем вложение
             $stmt = $this->db->prepare("
                 SELECT a.*, u.username, i.title as idea_title
-                FROM attachments a 
-                JOIN users u ON a.user_id = u.id 
+                FROM attachments a
+                JOIN users u ON a.user_id = u.id
                 JOIN ideas i ON a.idea_id = i.id
                 WHERE a.id = ?
             ");
@@ -244,10 +244,10 @@ class AttachmentsController
 
             // Получаем все вложения для идеи
             $stmt = $this->db->prepare("
-                SELECT a.id, a.original_name, a.file_size, a.mime_type, 
+                SELECT a.id, a.original_name, a.file_size, a.mime_type,
                        a.created_at, u.username, a.user_id
-                FROM attachments a 
-                JOIN users u ON a.user_id = u.id 
+                FROM attachments a
+                JOIN users u ON a.user_id = u.id
                 WHERE a.idea_id = ?
                 ORDER BY a.created_at DESC
             ");

@@ -31,11 +31,11 @@ try {
                 $total = $countStmt->fetchColumn();
 
                 // Получение данных
-                $sql = "SELECT i.*, u.username 
-                        FROM ideas i 
-                        LEFT JOIN users u ON i.user_id = u.id 
+                $sql = "SELECT i.*, u.username
+                        FROM ideas i
+                        LEFT JOIN users u ON i.user_id = u.id
                         WHERE " . implode(' AND ', $whereConditions) . "
-                        ORDER BY i.created_at DESC 
+                        ORDER BY i.created_at DESC
                         LIMIT $limit OFFSET $offset";
 
                 $stmt = $this->pdo->prepare($sql);

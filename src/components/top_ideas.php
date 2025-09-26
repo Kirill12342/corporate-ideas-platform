@@ -24,44 +24,44 @@ if (!isset($_SESSION['user_id'])) {
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         .top-header {
             text-align: center;
             margin-bottom: 30px;
         }
-        
+
         .top-header h1 {
             color: var(--color_black);
             font-size: 28px;
             margin-bottom: 10px;
         }
-        
+
         .top-header p {
             color: #666;
             font-size: 16px;
         }
-        
+
         /* Стили для header и логотипа */
         .header {
             height: 150px;
         }
-        
+
         .header .left_block img {
             height: 130px;
             width: auto;
             object-fit: contain;
         }
-        
+
         .header .left_block p {
             display: none; /* Убираем белую надпись */
         }
-        
+
         .header .right-block {
             display: flex;
             gap: 15px;
             align-items: center;
         }
-        
+
         .header .right-block button {
             padding: 12px 20px;
             background: var(--color_button, #49AD09);
@@ -74,18 +74,18 @@ if (!isset($_SESSION['user_id'])) {
             transition: all 0.3s ease;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
+
         .header .right-block button:hover {
             background: #3a8f07;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
-        
+
         .header .right-block button:active {
             transform: translateY(0);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
+
         .filters-section {
             background: var(--color_white);
             padding: 20px;
@@ -93,26 +93,26 @@ if (!isset($_SESSION['user_id'])) {
             margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        
+
         .filters-row {
             display: flex;
             gap: 15px;
             align-items: center;
             flex-wrap: wrap;
         }
-        
+
         .filter-group {
             display: flex;
             flex-direction: column;
             gap: 5px;
         }
-        
+
         .filter-group label {
             font-size: 12px;
             color: #666;
             font-weight: 500;
         }
-        
+
         .filter-select, .filter-input {
             padding: 8px 12px;
             border: 1px solid #ddd;
@@ -120,14 +120,14 @@ if (!isset($_SESSION['user_id'])) {
             font-size: 14px;
             min-width: 120px;
         }
-        
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-bottom: 30px;
         }
-        
+
         .stat-card {
             background: var(--color_white);
             padding: 20px;
@@ -135,25 +135,25 @@ if (!isset($_SESSION['user_id'])) {
             text-align: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        
+
         .stat-number {
             font-size: 24px;
             font-weight: bold;
             color: var(--color_button);
         }
-        
+
         .stat-label {
             font-size: 12px;
             color: #666;
             margin-top: 5px;
         }
-        
+
         .top-ideas-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 20px;
         }
-        
+
         .top-idea-card {
             background: var(--color_white);
             border-radius: 10px;
@@ -162,12 +162,12 @@ if (!isset($_SESSION['user_id'])) {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
         }
-        
+
         .top-idea-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
-        
+
         .rank-badge {
             position: absolute;
             top: 15px;
@@ -183,22 +183,22 @@ if (!isset($_SESSION['user_id'])) {
             font-weight: bold;
             font-size: 14px;
         }
-        
+
         .rank-badge.gold {
             background: linear-gradient(135deg, #ffd700, #ffed4a);
             color: #000;
         }
-        
+
         .rank-badge.silver {
             background: linear-gradient(135deg, #c0c0c0, #e5e5e5);
             color: #000;
         }
-        
+
         .rank-badge.bronze {
             background: linear-gradient(135deg, #cd7f32, #d4a574);
             color: var(--color_white);
         }
-        
+
         .idea-title {
             font-size: 16px;
             font-weight: bold;
@@ -206,7 +206,7 @@ if (!isset($_SESSION['user_id'])) {
             margin-bottom: 8px;
             padding-right: 40px;
         }
-        
+
         .idea-description {
             font-size: 14px;
             color: #666;
@@ -217,7 +217,7 @@ if (!isset($_SESSION['user_id'])) {
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-        
+
         .idea-meta {
             display: flex;
             justify-content: space-between;
@@ -226,80 +226,80 @@ if (!isset($_SESSION['user_id'])) {
             color: #999;
             margin-bottom: 15px;
         }
-        
+
         .idea-rating {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-        
+
         .rating-item {
             display: flex;
             align-items: center;
             gap: 4px;
             font-weight: 500;
         }
-        
+
         .likes {
             color: #28a745;
         }
-        
+
         .dislikes {
             color: #dc3545;
         }
-        
+
         .popularity {
             color: #ffc107;
         }
-        
+
         .loading {
             text-align: center;
             padding: 40px;
             color: #666;
         }
-        
+
         .no-results {
             text-align: center;
             padding: 40px;
             color: #666;
         }
-        
+
         @media (max-width: 768px) {
             .top-ideas-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-            
+
             .filters-row {
                 flex-direction: column;
                 align-items: stretch;
             }
-            
+
             .filter-group {
                 width: 100%;
             }
-            
+
             /* Скрываем десктоп меню на мобильных */
             .desktop-only {
                 display: none !important;
             }
-            
+
             /* Показываем бургер-меню на мобильных */
             .mobile-only {
                 display: block !important;
             }
-            
+
             /* Увеличиваем логотип на мобильных */
             .header .left_block img {
                 height: 100px;
             }
-            
+
 
         }
-        
+
         /* Переопределяем стили бургер-меню для темного header */
         .header .burger-btn {
             flex-direction: column !important;
@@ -312,11 +312,11 @@ if (!isset($_SESSION['user_id'])) {
             margin-right: 30px !important;
             cursor: pointer !important;
         }
-        
+
         .header .burger-btn:hover {
             background: rgba(255,255,255,0.2) !important;
         }
-        
+
         .header .burger-btn span {
             display: block !important;
             background-color: #333 !important;
@@ -325,43 +325,43 @@ if (!isset($_SESSION['user_id'])) {
             border-radius: 2px !important;
             transition: all 0.3s ease !important;
         }
-        
+
         /* Активное состояние бургера */
         .header .burger-btn.active span:nth-child(1) {
             transform: rotate(45deg) translate(8px, 8px) !important;
             background-color: #333 !important;
         }
-        
+
         .header .burger-btn.active span:nth-child(2) {
             opacity: 0 !important;
         }
-        
+
         .header .burger-btn.active span:nth-child(3) {
             transform: rotate(-45deg) translate(8px, -8px) !important;
             background-color: #333 !important;
         }
-        
+
         /* Стили для мобильных устройств */
         @media (max-width: 768px) {
             .mobile-only {
                 display: flex !important;
             }
-            
+
             .header .burger-btn {
                 display: flex !important;
             }
-            
+
             .desktop-only {
                 display: none !important;
             }
         }
-        
+
         /* Стили для десктопа */
         @media (min-width: 769px) {
             .desktop-only {
                 display: flex !important;
             }
-            
+
             .mobile-only, .header .burger-btn {
                 display: none !important;
             }
@@ -512,7 +512,7 @@ if (!isset($_SESSION['user_id'])) {
 
                 topIdeasGrid.innerHTML = ideas.map((idea, index) => {
                     const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
-                    
+
                     return `
                         <div class="top-idea-card">
                             <div class="rank-badge ${rankClass}">${index + 1}</div>
@@ -553,14 +553,14 @@ if (!isset($_SESSION['user_id'])) {
             function updateCategories(categories) {
                 const currentValue = categoryFilter.value;
                 categoryFilter.innerHTML = '<option value="all">Все категории</option>';
-                
+
                 categories.forEach(category => {
                     const option = document.createElement('option');
                     option.value = category;
                     option.textContent = category;
                     categoryFilter.appendChild(option);
                 });
-                
+
                 categoryFilter.value = currentValue;
             }
 

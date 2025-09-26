@@ -9,10 +9,10 @@ echo "<h3>1. Тест подключения к БД</h3>";
 try {
     require_once 'config.php';
     echo "✅ config.php загружен<br>";
-    
+
     $stmt = $pdo->query("SELECT 1");
     echo "✅ Подключение к БД работает<br>";
-    
+
     // Проверим таблицы
     $tables = ['users', 'ideas'];
     foreach ($tables as $table) {
@@ -24,7 +24,7 @@ try {
             echo "❌ Таблица $table: " . $e->getMessage() . "<br>";
         }
     }
-    
+
 } catch (Exception $e) {
     echo "❌ Ошибка: " . $e->getMessage() . "<br>";
     echo "Убедитесь что XAMPP запущен и БД 'stuffVoice' создана.<br>";
@@ -54,32 +54,32 @@ if ($ideasCount == 0) {
         // Создаем пользователя если его нет
         $stmt = $pdo->query("SELECT COUNT(*) FROM users");
         $userCount = $stmt->fetchColumn();
-        
+
         if ($userCount == 0) {
             $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
             $stmt->execute(['testuser', 'test@example.com', password_hash('test123', PASSWORD_DEFAULT)]);
             echo "✅ Создан тестовый пользователь<br>";
         }
-        
+
         // Получаем ID пользователя
         $stmt = $pdo->query("SELECT id FROM users LIMIT 1");
         $userId = $stmt->fetchColumn();
-        
+
         // Создаем тестовые идеи
         $ideas = [
             ['Улучшение UI', 'Сделать интерфейс более современным', 'Дизайн', 'На рассмотрении'],
             ['Автоматизация процессов', 'Внедрить автоматизацию рутинных задач', 'Процессы', 'В работе'],
             ['Мобильное приложение', 'Создать мобильную версию системы', 'Технологии', 'Принято']
         ];
-        
+
         $stmt = $pdo->prepare("INSERT INTO ideas (user_id, title, description, category, status, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
-        
+
         foreach ($ideas as $idea) {
             $stmt->execute([$userId, $idea[0], $idea[1], $idea[2], $idea[3]]);
         }
-        
+
         echo "✅ Создано " . count($ideas) . " тестовых идей<br>";
-        
+
     } catch (Exception $e) {
         echo "❌ Ошибка создания данных: " . $e->getMessage() . "<br>";
     }
@@ -90,7 +90,7 @@ echo "<h3>4. Тест выборки идей</h3>";
 try {
     $stmt = $pdo->query("SELECT i.*, u.username FROM ideas i LEFT JOIN users u ON i.user_id = u.id LIMIT 3");
     $ideas = $stmt->fetchAll();
-    
+
     if (empty($ideas)) {
         echo "❌ Нет идей в БД<br>";
     } else {

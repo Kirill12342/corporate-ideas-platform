@@ -4,11 +4,11 @@ header('Content-Type: application/json; charset=utf-8');
 
 try {
     require_once 'config.php';
-    
+
     // Простой тест - получим идеи из БД
     $stmt = $pdo->query("SELECT i.*, u.username FROM ideas i LEFT JOIN users u ON i.user_id = u.id ORDER BY i.created_at DESC LIMIT 5");
     $ideas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     $html = '';
     if (empty($ideas)) {
         $html = '<tr><td colspan="7" style="text-align: center;">Нет идей в базе данных</td></tr>';
@@ -19,7 +19,7 @@ try {
             $status = htmlspecialchars($idea['status'] ?? 'Без статуса');
             $username = htmlspecialchars($idea['username'] ?? 'Неизвестный');
             $date = date('d.m.Y', strtotime($idea['created_at'] ?? 'now'));
-            
+
             $html .= "<tr>
                 <td>{$idea['id']}</td>
                 <td>{$title}</td>
@@ -31,7 +31,7 @@ try {
             </tr>";
         }
     }
-    
+
     $response = [
         'success' => true,
         'html' => $html,
@@ -42,9 +42,9 @@ try {
             'total' => count($ideas)
         ]
     ];
-    
+
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
-    
+
 } catch (Exception $e) {
     $response = [
         'success' => false,
@@ -52,7 +52,7 @@ try {
         'file' => __FILE__,
         'line' => $e->getLine()
     ];
-    
+
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
 }
 ?>

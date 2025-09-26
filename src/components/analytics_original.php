@@ -147,11 +147,11 @@ class Analytics
             $total = $countStmt->fetchColumn();
 
             // Получение данных
-            $sql = "SELECT i.*, u.username 
-                    FROM ideas i 
-                    LEFT JOIN users u ON i.user_id = u.id 
-                    WHERE $whereClause 
-                    ORDER BY i.created_at DESC 
+            $sql = "SELECT i.*, u.username
+                    FROM ideas i
+                    LEFT JOIN users u ON i.user_id = u.id
+                    WHERE $whereClause
+                    ORDER BY i.created_at DESC
                     LIMIT $limit OFFSET $offset";
 
             $stmt = $this->pdo->prepare($sql);
@@ -340,14 +340,14 @@ class Analytics
 
     private function getIdeasTimeline($filters = [])
     {
-        $sql = "SELECT DATE(created_at) as date, COUNT(*) as count 
-                FROM ideas 
+        $sql = "SELECT DATE(created_at) as date, COUNT(*) as count
+                FROM ideas
                 WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)";
         $params = [];
 
         if (!empty($filters['date_from'])) {
-            $sql = "SELECT DATE(created_at) as date, COUNT(*) as count 
-                    FROM ideas 
+            $sql = "SELECT DATE(created_at) as date, COUNT(*) as count
+                    FROM ideas
                     WHERE DATE(created_at) >= ?";
             $params[] = $filters['date_from'];
 

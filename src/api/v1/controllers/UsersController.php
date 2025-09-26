@@ -16,14 +16,14 @@ class UsersController
 
         try {
             $sql = "
-                SELECT 
+                SELECT
                     id,
                     username,
                     role,
                     created_at,
                     (SELECT COUNT(*) FROM ideas WHERE user_id = users.id) as ideas_count,
                     (SELECT COUNT(*) FROM idea_votes WHERE user_id = users.id) as votes_count
-                FROM users 
+                FROM users
                 WHERE id = :user_id
             ";
 
@@ -128,7 +128,7 @@ class UsersController
 
         try {
             $sql = "
-                SELECT 
+                SELECT
                     u.id,
                     u.username,
                     u.created_at,
@@ -153,7 +153,7 @@ class UsersController
 
             // Получение последних идей пользователя
             $ideas_sql = "
-                SELECT 
+                SELECT
                     id,
                     title,
                     category,
@@ -161,9 +161,9 @@ class UsersController
                     created_at,
                     likes_count,
                     dislikes_count
-                FROM ideas 
+                FROM ideas
                 WHERE user_id = :user_id AND status = 'approved'
-                ORDER BY created_at DESC 
+                ORDER BY created_at DESC
                 LIMIT 5
             ";
 

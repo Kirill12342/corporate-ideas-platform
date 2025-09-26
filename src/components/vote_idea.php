@@ -41,27 +41,27 @@ try {
     $checkStmt = $pdo->prepare($checkSql);
     $checkStmt->execute([$idea_id]);
     $idea = $checkStmt->fetch();
-    
+
     if (!$idea) {
         echo json_encode(['success' => false, 'message' => 'Идея не найдена']);
         exit();
     }
-    
+
     // Проверяем, не голосует ли пользователь за свою собственную идею
     if ($idea['user_id'] == $user_id) {
         echo json_encode(['success' => false, 'message' => 'Нельзя голосовать за собственную идею']);
         exit();
     }
-    
+
     // Проверяем существующий голос
     $existingVoteSql = "SELECT vote_type FROM idea_votes WHERE idea_id = ? AND user_id = ?";
     $existingVoteStmt = $pdo->prepare($existingVoteSql);
     $existingVoteStmt->execute([$idea_id, $user_id]);
     $existingVote = $existingVoteStmt->fetch();
-    
+
     // Начинаем транзакцию
     $pdo->beginTransaction();
-    
+
     if ($vote_type === 'remove') {
         // Удаляем голос
         if ($existingVote) {
@@ -95,21 +95,21 @@ try {
             $message = $vote_type === 'like' ? 'Поставлен лайк' : 'Поставлен дизлайк';
         }
     }
-    
+
     // Получаем обновленную статистику
     $statsSql = "SELECT likes_count, dislikes_count, total_score, popularity_rank FROM ideas WHERE id = ?";
     $statsStmt = $pdo->prepare($statsSql);
     $statsStmt->execute([$idea_id]);
     $stats = $statsStmt->fetch();
-    
+
     // Получаем текущий голос пользователя
     $currentVoteSql = "SELECT vote_type FROM idea_votes WHERE idea_id = ? AND user_id = ?";
     $currentVoteStmt = $pdo->prepare($currentVoteSql);
     $currentVoteStmt->execute([$idea_id, $user_id]);
     $currentVote = $currentVoteStmt->fetch();
-    
+
     $pdo->commit();
-    
+
     echo json_encode([
         'success' => true,
         'message' => $message,
@@ -121,19 +121,19 @@ try {
         ],
         'user_vote' => $currentVote ? $currentVote['vote_type'] : null
     ]);
-    
+
 } catch (PDOException $e) {
     $pdo->rollBack();
     http_response_code(500);
     echo json_encode([
-        'success' => false, 
+        'success' => false,
         'message' => 'Ошибка базы данных: ' . $e->getMessage()
     ]);
 } catch (Exception $e) {
     $pdo->rollBack();
     http_response_code(500);
     echo json_encode([
-        'success' => false, 
+        'success' => false,
         'message' => 'Ошибка сервера: ' . $e->getMessage()
     ]);
 }

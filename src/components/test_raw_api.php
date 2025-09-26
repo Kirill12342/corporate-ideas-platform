@@ -8,17 +8,17 @@ echo "=== Тест Analytics API ===\n\n";
 try {
     require_once 'config.php';
     echo "✅ Подключение к БД: OK\n";
-    
+
     // Проверим количество идей
     $stmt = $pdo->query("SELECT COUNT(*) FROM ideas");
     $count = $stmt->fetchColumn();
     echo "📊 Количество идей в БД: $count\n\n";
-    
+
     if ($count == 0) {
         echo "❌ В БД нет идей! Добавьте тестовые данные.\n";
         echo "Откройте add_test_data.php для добавления данных.\n\n";
     }
-    
+
 } catch (Exception $e) {
     echo "❌ Ошибка БД: " . $e->getMessage() . "\n\n";
     exit;
@@ -40,10 +40,10 @@ try {
     if (function_exists('headers_sent') && !headers_sent()) {
         header_remove();
     }
-    
+
     include 'analytics.php';
     $output = ob_get_contents();
-    
+
 } catch (Exception $e) {
     $output = "EXCEPTION: " . $e->getMessage();
 } finally {

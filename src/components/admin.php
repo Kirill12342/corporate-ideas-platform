@@ -1,4 +1,4 @@
-﻿<?php include 'admin_auth.php'; ?>
+<?php include 'admin_auth.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,18 +23,18 @@
                     $categoryStmt = $pdo->prepare($categorySql);
                     $categoryStmt->execute();
                     $categories = $categoryStmt->fetchAll();
-                    
+
                     foreach ($categories as $cat):
                 ?>
                     <option value="<?= htmlspecialchars($cat['category']) ?>"><?= htmlspecialchars($cat['category']) ?></option>
-                <?php 
+                <?php
                     endforeach;
                 } catch (PDOException $e) {
                     // Обработка ошибки, но не прерываем работу страницы
                 }
                 ?>
             </select>
-            
+
             <select id="status-filter">
                 <option value="">Все статусы</option>
                 <option value="На рассмотрении">На рассмотрении</option>
@@ -42,22 +42,22 @@
                 <option value="В работе">В работе</option>
                 <option value="Отклонено">Отклонено</option>
             </select>
-            
+
             <button id="reset-filters">Сбросить фильтры</button>
         </div>
-        
+
         <div class="burger-btn mobile-only" onclick="toggleMobileMenu()">
             <span></span>
             <span></span>
             <span></span>
         </div>
-        
+
         <div class="right-block desktop-only">
             <button onclick="window.location.href='top_ideas.php'">🏆 Топ идеи</button>
             <button onclick="window.location.href='admin.html'">📊 Дашборд</button>
             <button id="out">Выход</button>
         </div>
-        
+
         <div class="mobile-menu" id="mobileMenu">
             <div class="mobile-menu-content">
                 <a href="../index.html" onclick="closeMobileMenu()">Главная</a>
@@ -88,16 +88,16 @@
                 if (strpos($type, 'text') !== false) return '📃';
                 return '📄';
             }
-            
+
             try {
-                $sql = "SELECT i.*, u.fullname, u.email 
-                        FROM ideas i 
-                        JOIN users u ON i.user_id = u.id 
+                $sql = "SELECT i.*, u.fullname, u.email
+                        FROM ideas i
+                        JOIN users u ON i.user_id = u.id
                         ORDER BY i.total_score DESC, i.likes_count DESC, i.created_at DESC";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 $ideas = $stmt->fetchAll();
-                
+
                 // Получаем файлы для всех идей
                 $attachments = [];
                 if (!empty($ideas)) {
@@ -107,13 +107,13 @@
                     $attachStmt = $pdo->prepare($attachSql);
                     $attachStmt->execute($idea_ids);
                     $allAttachments = $attachStmt->fetchAll();
-                    
+
                     // Группируем по idea_id
                     foreach ($allAttachments as $attachment) {
                         $attachments[$attachment['idea_id']][] = $attachment;
                     }
                 }
-                
+
                 if (count($ideas) > 0):
                     foreach ($ideas as $idea):
                         $statusClass = '';
@@ -139,7 +139,7 @@
                         <p><span class="green">Категория</span>: <?= htmlspecialchars($idea['category']) ?></p>
                         <p><span class="green">Статус</span>: <span class="<?= $statusClass ?>"><?= htmlspecialchars($idea['status']) ?></span></p>
                         <p><span class="green">Дата</span>: <?= date('d.m.Y H:i', strtotime($idea['created_at'])) ?></p>
-                        
+
                         <!-- Рейтинг и голосование -->
                         <div class="rating-stats">
                             <span class="likes-count">
@@ -154,29 +154,29 @@
                             </span>
                             <?php endif; ?>
                         </div>
-                        
+
                         <?php if (isset($attachments[$idea['id']]) && !empty($attachments[$idea['id']])): ?>
                         <div class="attachments-preview">
                             <p><span class="green">Вложения</span>: <?= count($attachments[$idea['id']]) ?> файл(ов)</p>
                             <div class="attachment-thumbnails">
-                                <?php 
+                                <?php
                                 $shown = 0;
-                                foreach ($attachments[$idea['id']] as $attachment): 
+                                foreach ($attachments[$idea['id']] as $attachment):
                                     if ($shown >= 3) break;
                                     $isImage = strpos($attachment['file_type'], 'image/') === 0;
                                 ?>
                                     <div class="attachment-thumb">
                                         <?php if ($isImage): ?>
-                                            <img src="view_image.php?id=<?= $attachment['id'] ?>" 
+                                            <img src="view_image.php?id=<?= $attachment['id'] ?>"
                                                  alt="<?= htmlspecialchars($attachment['original_name']) ?>"
                                                  title="<?= htmlspecialchars($attachment['original_name']) ?>">
                                         <?php else: ?>
                                             <div class="file-icon-small"><?= getFileIcon($attachment['file_type']) ?></div>
                                         <?php endif; ?>
                                     </div>
-                                <?php 
+                                <?php
                                     $shown++;
-                                endforeach; 
+                                endforeach;
                                 if (count($attachments[$idea['id']]) > 3):
                                 ?>
                                     <div class="more-files">+<?= count($attachments[$idea['id']]) - 3 ?></div>
@@ -189,7 +189,7 @@
                         <button data-idea='<?= json_encode($idea) ?>'>Подробнее</button>
                     </div>
                 </div>
-            <?php 
+            <?php
                     endforeach;
                 else:
             ?>
@@ -197,7 +197,7 @@
                     <h3>Нет идей для отображения</h3>
                     <p>Пока никто не подал предложений.</p>
                 </div>
-            <?php 
+            <?php
                 endif;
             } catch (PDOException $e) {
                 echo '<div class="error" style="color: red; padding: 20px;">Ошибка загрузки данных: ' . $e->getMessage() . '</div>';
@@ -206,7 +206,7 @@
         </div>
     </div>
 
-        
+
     <div id="modal" class="modal hidden">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
@@ -247,6 +247,6 @@
 
     <script src="../js/admin.js"></script>
     <script src="../js/burger-menu.js"></script>
-    
+
 </body>
 </html>

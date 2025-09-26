@@ -43,7 +43,7 @@ if (empty($response)) {
 } else {
     echo "Первые 200 символов:<br>";
     echo "<pre>" . htmlspecialchars(substr($response, 0, 200)) . "</pre><br>";
-    
+
     // Проверяем JSON
     $decoded = json_decode($response, true);
     if ($decoded === null) {
@@ -62,7 +62,7 @@ if (empty($response)) {
         if (isset($decoded['html'])) {
             echo "HTML длина: " . strlen($decoded['html']) . " символов<br>";
         }
-        
+
         echo "<details><summary>Полный JSON ответ (кликните для раскрытия)</summary>";
         echo "<pre style='background: #f8f9fa; padding: 10px; max-height: 400px; overflow: auto;'>" . json_encode($decoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "</pre>";
         echo "</details>";
@@ -77,26 +77,26 @@ try {
     // Симулируем переменные как при POST запросе
     $_SERVER['REQUEST_METHOD'] = 'POST';
     $_POST = [];
-    
+
     // Мокаем file_get_contents для php://input
     $GLOBALS['mockPhpInput'] = $postData;
-    
+
     ob_start();
-    
+
     // Сохраняем текущие переменные
     $originalPost = $_POST;
     $originalServer = $_SERVER['REQUEST_METHOD'];
-    
+
     // Захватываем вывод analytics.php
     include 'analytics.php';
-    
+
     $output = ob_get_contents();
     ob_end_clean();
-    
+
     // Восстанавливаем переменные
     $_POST = $originalPost;
     $_SERVER['REQUEST_METHOD'] = $originalServer;
-    
+
     echo "Результат прямого включения:<br>";
     if (empty($output)) {
         echo "❌ Пустой вывод при включении файла<br>";
@@ -110,7 +110,7 @@ try {
             echo "<pre>" . htmlspecialchars($output) . "</pre>";
         }
     }
-    
+
 } catch (Exception $e) {
     echo "❌ Ошибка при прямом включении: " . $e->getMessage() . "<br>";
 }

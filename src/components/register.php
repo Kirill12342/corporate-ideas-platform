@@ -1,5 +1,5 @@
 <?php
-require 'config.php'; 
+require 'config.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullname = trim($_POST['fullname']);
@@ -43,26 +43,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         $username = explode('@', $email)[0];
         $base_username = preg_replace('/[^a-zA-Z0-9_]/', '', $username);
-        $username = $base_username ?: 'user'; 
+        $username = $base_username ?: 'user';
         $counter = 1;
-        
+
         while (true) {
             $check_username_sql = "SELECT COUNT(*) FROM users WHERE username = ?";
             $check_username_stmt = $pdo->prepare($check_username_sql);
             $check_username_stmt->execute([$username]);
-            
+
             if ($check_username_stmt->fetchColumn() == 0) {
                 break;
             }
-            
+
             $username = $base_username . $counter;
             $counter++;
         }
-        
+
         $sql = "INSERT INTO users (fullname, email, username, password, role) VALUES (?, ?, ?, ?, 'user')";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$fullname, $email, $username, $hashed_password]);
-        
+
     } catch (PDOException $e) {
         try {
             $sql = "INSERT INTO users (fullname, email, password) VALUES (?, ?, ?)";
@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['user_id'] = $pdo->lastInsertId();
     $_SESSION['user_role'] = 'user';
     $_SESSION['user_email'] = $email;
-    
+
     header("Location: user.php?success=" . urlencode("Регистрация прошла успешно! Добро пожаловать!"));
     exit();
 }

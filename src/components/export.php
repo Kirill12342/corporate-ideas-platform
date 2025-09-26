@@ -131,10 +131,10 @@ class SimpleExport
         $whereClause = implode(' AND ', $whereConditions);
 
         // Получение идей
-        $sql = "SELECT i.*, u.username 
-                FROM ideas i 
-                LEFT JOIN users u ON i.user_id = u.id 
-                WHERE $whereClause 
+        $sql = "SELECT i.*, u.username
+                FROM ideas i
+                LEFT JOIN users u ON i.user_id = u.id
+                WHERE $whereClause
                 ORDER BY i.created_at DESC";
 
         $stmt = $this->pdo->prepare($sql);

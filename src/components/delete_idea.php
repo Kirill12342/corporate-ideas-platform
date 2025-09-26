@@ -30,24 +30,24 @@ try {
     $checkStmt = $pdo->prepare($checkSql);
     $checkStmt->bindParam(':idea_id', $ideaId, PDO::PARAM_INT);
     $checkStmt->execute();
-    
+
     $idea = $checkStmt->fetch();
-    
+
     if (!$idea) {
         echo json_encode(['success' => false, 'error' => 'Идея с указанным ID не найдена']);
         exit;
     }
-    
+
     // Удаление идеи из базы данных
     $deleteSql = "DELETE FROM ideas WHERE id = :idea_id";
     $deleteStmt = $pdo->prepare($deleteSql);
     $deleteStmt->bindParam(':idea_id', $ideaId, PDO::PARAM_INT);
-    
+
     if ($deleteStmt->execute()) {
         // Проверяем, что запись действительно была удалена
         if ($deleteStmt->rowCount() > 0) {
             echo json_encode([
-                'success' => true, 
+                'success' => true,
                 'message' => 'Идея "' . htmlspecialchars($idea['title']) . '" успешно удалена',
                 'deleted_id' => $ideaId
             ]);
@@ -57,7 +57,7 @@ try {
     } else {
         echo json_encode(['success' => false, 'error' => 'Ошибка при выполнении запроса удаления']);
     }
-    
+
 } catch (PDOException $e) {
     error_log("Database error in delete_idea.php: " . $e->getMessage());
     echo json_encode(['success' => false, 'error' => 'Ошибка базы данных: ' . $e->getMessage()]);

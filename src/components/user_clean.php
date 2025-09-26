@@ -109,7 +109,7 @@ include 'user_auth.php';
                 $stmt->execute([$_SESSION['user_id']]);
                 $ideas = $stmt->fetchAll();
 
-                // Получаем файлы для всех идей
+                // Получаем файлы для всех идей пользователя
                 $attachments = [];
                 if (!empty($ideas)) {
                     $idea_ids = array_column($ideas, 'id');
@@ -157,7 +157,7 @@ include 'user_auth.php';
                     <p><span class="green">Дата подачи</span>: <?= date('d.m.Y H:i', strtotime($idea['created_at'])) ?></p>
 
                     <!-- Система голосования -->
-                    <?php if ($idea['user_id'] != $_SESSION['user_id']): ?>
+                    <?php if ($idea['user_id'] != $_SESSION['user_id']): // Не показывать голосование для собственных идей ?>
                     <div class="voting-section">
                         <div class="voting-buttons">
                             <button class="vote-btn like-btn <?= ($idea['user_vote'] === 'like') ? 'active' : '' ?>"
@@ -248,3 +248,4 @@ include 'user_auth.php';
     <script src="../js/burger-menu.js"></script>
 </body>
 </html>
+

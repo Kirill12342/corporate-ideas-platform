@@ -112,7 +112,7 @@ class RealtimeController
             while (true) {
                 // Проверяем обновленные идеи
                 $stmt = $this->db->prepare("
-                    SELECT i.*, u.username, 
+                    SELECT i.*, u.username,
                            COUNT(DISTINCT iv.id) as votes_count,
                            COUNT(DISTINCT a.id) as attachments_count
                     FROM ideas i
@@ -201,11 +201,11 @@ class RealtimeController
                         if (!isset($ideaStats[$ideaId])) {
                             // Получаем актуальную статистику голосов для идеи
                             $statsStmt = $this->db->prepare("
-                                SELECT 
+                                SELECT
                                     COUNT(*) as total_votes,
                                     SUM(CASE WHEN vote_type = 'like' THEN 1 ELSE 0 END) as likes,
                                     SUM(CASE WHEN vote_type = 'dislike' THEN 1 ELSE 0 END) as dislikes
-                                FROM idea_votes 
+                                FROM idea_votes
                                 WHERE idea_id = ?
                             ");
                             $statsStmt->execute([$ideaId]);

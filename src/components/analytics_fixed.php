@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 try {
     require_once 'config.php';
-    
+
     // Получаем действие
     $action = 'stats';
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -25,24 +25,24 @@ try {
     } else if (isset($_GET['action'])) {
         $action = $_GET['action'];
     }
-    
+
     $response = ['success' => false, 'error' => 'Неизвестное действие'];
-    
+
     switch ($action) {
         case 'stats':
             // Статистика
             $stmt = $pdo->query("SELECT COUNT(*) FROM ideas");
             $totalIdeas = $stmt->fetchColumn();
-            
+
             $stmt = $pdo->query("SELECT COUNT(*) FROM ideas WHERE status = 'В работе'");
             $inProgress = $stmt->fetchColumn();
-            
+
             $stmt = $pdo->query("SELECT COUNT(*) FROM ideas WHERE status = 'Принято'");
             $approved = $stmt->fetchColumn();
-            
+
             $stmt = $pdo->query("SELECT COUNT(DISTINCT user_id) FROM ideas");
             $activeUsers = $stmt->fetchColumn();
-            
+
             $response = [
                 'success' => true,
                 'data' => [
@@ -53,7 +53,7 @@ try {
                 ]
             ];
             break;
-            
+
         case 'charts':
             // Данные для графиков
             $response = [
@@ -78,24 +78,24 @@ try {
                 ]
             ];
             break;
-            
+
         case 'ideas_table':
             // Таблица идей
             $page = 1;
             $limit = 20;
-            
+
             $stmt = $pdo->query("SELECT COUNT(*) FROM ideas");
             $total = $stmt->fetchColumn();
-            
+
             $stmt = $pdo->query("
-                SELECT i.*, u.username 
-                FROM ideas i 
-                LEFT JOIN users u ON i.user_id = u.id 
-                ORDER BY i.created_at DESC 
+                SELECT i.*, u.username
+                FROM ideas i
+                LEFT JOIN users u ON i.user_id = u.id
+                ORDER BY i.created_at DESC
                 LIMIT $limit
             ");
             $ideas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
+
             $html = '';
             if (empty($ideas)) {
                 $html = '<tr><td colspan="7" style="text-align: center; color: #6c757d;">Идеи не найдены</td></tr>';
@@ -107,7 +107,7 @@ try {
                     $username = htmlspecialchars($idea['username'] ?? 'Неизвестный');
                     $date = date('d.m.Y', strtotime($idea['created_at'] ?? 'now'));
                     $id = $idea['id'];
-                    
+
                     // Определяем класс статуса
                     $statusClass = '';
                     switch ($status) {
@@ -123,7 +123,7 @@ try {
                         default:
                             $statusClass = 'status-info';
                     }
-                    
+
                     $html .= "
                     <tr>
                         <td>{$id}</td>
@@ -142,9 +142,9 @@ try {
                     </tr>";
                 }
             }
-            
+
             $totalPages = ceil($total / $limit);
-            
+
             $response = [
                 'success' => true,
                 'html' => $html,
@@ -158,15 +158,15 @@ try {
             ];
             break;
     }
-    
+
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
-    
+
 } catch (Exception $e) {
     $response = [
         'success' => false,
         'error' => 'Ошибка сервера: ' . $e->getMessage()
     ];
-    
+
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
 }
 ?>

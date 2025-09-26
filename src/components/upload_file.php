@@ -28,7 +28,7 @@ $allowed_types = [
     // Изображения
     'image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp',
     // Документы
-    'application/pdf', 'application/msword', 
+    'application/pdf', 'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/vnd.ms-excel',
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -49,11 +49,11 @@ if (!is_dir($upload_dir)) {
 
 try {
     $files = $_FILES['files'];
-    
+
     // Обработка множественной загрузки
     if (is_array($files['name'])) {
         $file_count = count($files['name']);
-        
+
         for ($i = 0; $i < $file_count; $i++) {
             if ($files['error'][$i] === UPLOAD_ERR_OK) {
                 $result = processFile([
@@ -62,7 +62,7 @@ try {
                     'size' => $files['size'][$i],
                     'type' => $files['type'][$i]
                 ], $upload_dir, $max_file_size, $allowed_types);
-                
+
                 if ($result['success']) {
                     $uploaded_files[] = $result['file_info'];
                 } else {
@@ -75,7 +75,7 @@ try {
         // Обработка одиночной загрузки
         if ($files['error'] === UPLOAD_ERR_OK) {
             $result = processFile($files, $upload_dir, $max_file_size, $allowed_types);
-            
+
             if ($result['success']) {
                 $uploaded_files[] = $result['file_info'];
             } else {
@@ -84,13 +84,13 @@ try {
             }
         }
     }
-    
+
     echo json_encode([
-        'success' => true, 
+        'success' => true,
         'message' => 'Файлы успешно загружены',
         'files' => $uploaded_files
     ]);
-    
+
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => 'Ошибка при загрузке: ' . $e->getMessage()]);
 }
@@ -100,17 +100,17 @@ function processFile($file, $upload_dir, $max_file_size, $allowed_types) {
     if ($file['size'] > $max_file_size) {
         return ['success' => false, 'message' => 'Файл ' . $file['name'] . ' слишком большой. Максимальный размер: 10 МБ'];
     }
-    
+
     // Проверка типа файла
     if (!in_array($file['type'], $allowed_types)) {
         return ['success' => false, 'message' => 'Недопустимый тип файла: ' . $file['name']];
     }
-    
+
     // Генерация безопасного имени файла
     $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
     $safe_filename = uniqid() . '_' . time() . '.' . $file_extension;
     $file_path = $upload_dir . $safe_filename;
-    
+
     // Перемещение загруженного файла
     if (move_uploaded_file($file['tmp_name'], $file_path)) {
         return [
@@ -131,12 +131,12 @@ function processFile($file, $upload_dir, $max_file_size, $allowed_types) {
 function formatFileSize($size) {
     $units = ['B', 'KB', 'MB', 'GB'];
     $unit_index = 0;
-    
+
     while ($size >= 1024 && $unit_index < count($units) - 1) {
         $size /= 1024;
         $unit_index++;
     }
-    
+
     return round($size, 2) . ' upload_file.php' . $units[$unit_index];
 }
 ?>
