@@ -781,6 +781,212 @@
     padding: 1.5rem;
 }
 
+/* Стили для отображения файлов в модальных окнах */
+.attachment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.attachment-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    transition: var(--transition-smooth);
+}
+
+.attachment-item:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 2px 8px rgba(73, 173, 9, 0.1);
+}
+
+.attachment-image {
+    max-width: 100%;
+    max-height: 120px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.attachment-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.attachment-name {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+    word-break: break-word;
+}
+
+.attachment-size {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.attachment-download {
+    display: inline-block;
+    padding: 4px 8px;
+    background: var(--accent-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 11px;
+    transition: var(--transition-smooth);
+}
+
+.attachment-download:hover {
+    background: #3a8c07;
+    transform: translateY(-1px);
+}
+
+.file-icon-large {
+    font-size: 40px;
+    margin-bottom: 8px;
+    opacity: 0.7;
+}
+
+.file-icon-small {
+    font-size: 30px;
+    margin-bottom: 5px;
+    opacity: 0.7;
+}
+
+/* Информационные блоки */
+.info-block {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #e7f3ff;
+    border: 1px solid #b3d7ff;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #0066cc;
+}
+
+.info-block.warning {
+    background: #fff3cd;
+    border-color: #ffdd85;
+    color: #856404;
+}
+
+/* Модальное окно для просмотра изображений */
+.image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.image-modal.active {
+    display: flex;
+}
+
+.image-modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    position: relative;
+}
+
+.image-modal-img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.image-modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-smooth);
+}
+
+.image-modal-close:hover {
+    background: white;
+    transform: scale(1.1);
+}
+
+.image-modal-info {
+    position: absolute;
+    bottom: -50px;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Улучшения для кликабельности */
+.attachment-image {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.attachment-image:hover {
+    transform: scale(1.02);
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 16px rgba(73, 173, 9, 0.2);
+}
+
+.attachment-item {
+    position: relative;
+    cursor: pointer;
+}
+
+.attachment-item:hover .attachment-overlay {
+    opacity: 1;
+}
+
+.attachment-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition-smooth);
+    pointer-events: none;
+}
+
+.attachment-overlay::before {
+    content: '🔍';
+    font-size: 24px;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
 /* =============================================== */
 /* === АДАПТИВНЫЙ ДИЗАЙН === */
 /* =============================================== */
@@ -1027,6 +1233,36 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+    
+    /* Модальное окно изображения на мобильных */
+    .image-modal-content {
+        max-width: 95%;
+        max-height: 85%;
+        margin: 10px;
+    }
+    
+    .image-modal-close {
+        top: -35px;
+        right: 0;
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+    }
+    
+    .image-modal-info {
+        bottom: -40px;
+        padding: 8px;
+        font-size: 12px;
+    }
+    
+    /* Увеличенная область нажатия для изображений */
+    .attachment-item {
+        min-height: 44px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
     
     /* Увеличенные отступы для кнопок таблицы */

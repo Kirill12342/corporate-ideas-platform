@@ -319,6 +319,17 @@
             </div>
         </div>
     </div>
+
+    <!-- Модальное окно для просмотра изображений -->
+    <div class="image-modal" id="image-modal">
+        <div class="image-modal-content">
+            <button class="image-modal-close" onclick="closeImageModal()">×</button>
+            <img class="image-modal-img" id="modal-image" src="" alt="">
+            <div class="image-modal-info" id="modal-image-info">
+                <!-- Информация об изображении -->
+            </div>
+        </div>
+    </div>
     
     <!-- Мобильное меню -->
     <button class="mobile-menu-toggle" id="mobile-menu-toggle">☰</button>
@@ -388,6 +399,43 @@
                                 </div>
                             </div>
                         </div>
+                        ${idea.attachments && idea.attachments.length > 0 ? `
+                        <div style="margin-top: 20px;">
+                            <strong>Прикрепленные файлы:</strong>
+                            <div class="attachment-grid">
+                                ${idea.attachments.map(attachment => {
+                                    const isImage = attachment.file_type && attachment.file_type.startsWith('image/');
+                                    return `
+                                        <div class="attachment-item" ${isImage ? `onclick="openImageModal('view_image.php?id=${attachment.id}', '${attachment.original_name.replace(/'/g, "\\'")}', ${attachment.file_size})"` : ''}>
+                                            ${isImage ? `
+                                                <div class="attachment-overlay"></div>
+                                                <img src="view_image.php?id=${attachment.id}" 
+                                                     class="attachment-image"
+                                                     alt="${attachment.original_name}"
+                                                     title="Кликните для увеличения"
+                                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                                <div class="file-icon-large" style="display: none;">🖼️</div>
+                                            ` : `
+                                                <div class="file-icon-large">📄</div>
+                                            `}
+                                            <div class="attachment-name">
+                                                ${attachment.original_name}
+                                            </div>
+                                            <div class="attachment-size">
+                                                ${Math.round(attachment.file_size / 1024)} KB
+                                            </div>
+                                            <a href="download_file.php?id=${attachment.id}" 
+                                               class="attachment-download"
+                                               onclick="event.stopPropagation()"
+                                               download>
+                                                📥 Скачать
+                                            </a>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
                     `;
                     
                     // Скрываем кнопку сохранения для просмотра
@@ -447,6 +495,42 @@
                                 </select>
                             </div>
                         </div>
+                        ${idea.attachments && idea.attachments.length > 0 ? `
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 10px; font-weight: bold;">Прикрепленные файлы:</label>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px;">
+                                ${idea.attachments.map(attachment => {
+                                    const isImage = attachment.file_type && attachment.file_type.startsWith('image/');
+                                    const shortName = attachment.original_name.length > 15 ? attachment.original_name.substring(0, 12) + '...' : attachment.original_name;
+                                    return `
+                                        <div class="attachment-item" style="padding: 8px; font-size: 11px; ${isImage ? 'cursor: pointer;' : ''}" 
+                                             ${isImage ? `onclick="openImageModal('view_image.php?id=${attachment.id}', '${attachment.original_name.replace(/'/g, "\\'")}', ${attachment.file_size})"` : ''}>
+                                            ${isImage ? `
+                                                <div class="attachment-overlay"></div>
+                                                <img src="view_image.php?id=${attachment.id}" 
+                                                     style="max-width: 100%; max-height: 80px; border-radius: 3px; margin-bottom: 5px; cursor: pointer;"
+                                                     alt="${attachment.original_name}"
+                                                     title="${attachment.original_name} - Кликните для увеличения"
+                                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                                <div class="file-icon-small" style="display: none;">🖼️</div>
+                                            ` : `
+                                                <div class="file-icon-small">📄</div>
+                                            `}
+                                            <div style="font-weight: bold; margin-bottom: 3px;" title="${attachment.original_name}">
+                                                ${shortName}
+                                            </div>
+                                            <div style="color: #666; margin-bottom: 5px;">
+                                                ${Math.round(attachment.file_size / 1024)} KB
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                            <div class="info-block">
+                                💡 Файлы можно только просматривать. Для добавления новых файлов используйте форму создания идеи.
+                            </div>
+                        </div>
+                        ` : ''}
                         <input type="hidden" id="edit-id" value="${id}">
                     `;
                     
@@ -624,6 +708,43 @@
                 closeMobileMenu();
             }
         }
+
+        // === МОДАЛЬНОЕ ОКНО ДЛЯ ИЗОБРАЖЕНИЙ ===
+        function openImageModal(imageSrc, fileName, fileSize) {
+            const modal = document.getElementById('image-modal');
+            const modalImage = document.getElementById('modal-image');
+            const modalInfo = document.getElementById('modal-image-info');
+            
+            modalImage.src = imageSrc;
+            modalImage.alt = fileName;
+            modalInfo.innerHTML = `
+                <strong>${fileName}</strong><br>
+                Размер: ${Math.round(fileSize / 1024)} KB
+            `;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('image-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Закрытие модального окна при клике на фон
+        document.getElementById('image-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImageModal();
+            }
+        });
+
+        // Закрытие модального окна по Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeImageModal();
+            }
+        });
     </script>
 </body>
 </html>
