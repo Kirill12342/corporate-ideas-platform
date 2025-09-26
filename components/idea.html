@@ -75,11 +75,11 @@
     <div class="notification-count" style="display: none;">0</div>
 
     <!-- Подключаем все новые скрипты -->
-    <script src="../js/realtime.js"></script>
-    <script src="../js/file-upload.js"></script>
-    <script src="../js/ui-fixes.js"></script>
-    <script src="../js/idea.js"></script>
-    <script src="../js/burger-menu.js"></script>
+    <script src="../js/realtime.js?v=1.2"></script>
+    <script src="../js/file-upload.js?v=1.2"></script>
+    <script src="../js/ui-fixes.js?v=1.2"></script>
+    <script src="../js/idea.js?v=1.2"></script>
+    <script src="../js/burger-menu.js?v=1.2"></script>
 
     <script>
     // Инициализация после загрузки страницы
@@ -107,7 +107,9 @@
             e.preventDefault();
             
             // Показываем индикатор загрузки на кнопке
-            window.loadingManager.show(submitBtn, 'spinner');
+            if (window.loadingManager) {
+                window.loadingManager.show(submitBtn, 'spinner');
+            }
             
             try {
                 // Получаем данные формы
@@ -119,26 +121,46 @@
                     formData.append(`attachment_ids[]`, fileData.data.id);
                 });
                 
-                // Отправляем через API
-                const response = await window.apiClient.post('/ideas', {
-                    title: formData.get('title'),
-                    description: formData.get('description'),
-                    category: formData.get('category'),
-                    attachment_ids: uploadedFiles.map(f => f.data.id)
+                // Отправляем через стандартный PHP endpoint
+                const response = await fetch('submit_idea.php', {
+                    method: 'POST',
+                    body: formData
                 });
                 
-                // Показываем успех
-                window.toastManager.success('Идея успешно отправлена!');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 
-                // Перенаправляем на страницу с идеями
-                setTimeout(() => {
-                    window.location.href = 'user.php';
-                }, 1500);
+                const result = await response.text();
+                
+                // Проверяем результат (может быть JSON или HTML с redirect)
+                if (result.includes('success') || result.includes('успешно')) {
+                    // Показываем успех
+                    if (window.toastManager) {
+                        window.toastManager.success('Идея успешно отправлена!');
+                    } else {
+                        alert('Идея успешно отправлена!');
+                    }
+                    
+                    // Перенаправляем на страницу с идеями
+                    setTimeout(() => {
+                        window.location.href = 'user.php';
+                    }, 1500);
+                } else {
+                    throw new Error('Ошибка при сохранении идеи');
+                }
                 
             } catch (error) {
-                window.toastManager.error('Ошибка при отправке идеи: ' + error.message);
+                console.error('Ошибка отправки формы:', error);
+                if (window.toastManager) {
+                    window.toastManager.error('Ошибка при отправке идеи: ' + error.message);
+                } else {
+                    alert('Ошибка при отправке идеи: ' + error.message);
+                }
             } finally {
-                window.loadingManager.hide(submitBtn);
+                if (window.loadingManager) {
+                    window.loadingManager.hide(submitBtn);
+                }
             }
         });
 

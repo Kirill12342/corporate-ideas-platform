@@ -1,9 +1,18 @@
-﻿document.addEventListener('DOMContentLoaded', function() {
+﻿// idea.js v1.2 - Fixed null element checks
+document.addEventListener('DOMContentLoaded', function() {
     // Файловые вложения
     const fileUpload = document.getElementById('file-upload');
     const fileDropZone = document.getElementById('fileDropZone');
     const filePreview = document.getElementById('file-preview');
     let selectedFiles = [];
+
+    // Проверяем, есть ли элементы на странице перед добавлением обработчиков
+    if (!fileUpload || !fileDropZone || !filePreview) {
+        console.log('idea.js: Элементы загрузки файлов не найдены на этой странице');
+        return; // Выходим, если элементы не найдены
+    }
+    
+    console.log('idea.js: Инициализация загрузки файлов');
 
     // Обработка клика по зоне загрузки
     fileDropZone.addEventListener('click', () => {
