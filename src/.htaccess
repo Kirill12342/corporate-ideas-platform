@@ -1,0 +1,23 @@
+RewriteEngine On
+
+# Обработка запросов к API
+RewriteRule ^api/v1/test/?$ api/v1/test.php [L]
+RewriteRule ^api/v1/(.*)$ api/v1/index.php [L,QSA]
+
+# Для обычных файлов - если файл существует, отдаем его
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^(.*)$ $1 [L]
+
+# Для директорий - если директория существует, отдаем index.html из неё
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^(.*)$ $1/index.html [L]
+
+# CORS headers for preflight requests
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+Header always set Access-Control-Max-Age "3600"
+
+# Handle preflight OPTIONS requests
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ - [R=200,L]

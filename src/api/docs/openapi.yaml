@@ -1,0 +1,745 @@
+openapi: 3.0.3
+info:
+  title: Corporate Ideas Platform API
+  description: |
+    REST API для платформы корпоративных идей сотрудников.
+    
+    ## Аутентификация
+    API использует JWT токены для аутентификации. Получите токен через `/auth/login` и передавайте его в заголовке:
+    ```
+    Authorization: Bearer YOUR_JWT_TOKEN
+    ```
+    
+    ## Пагинация
+    Эндпоинты со списками поддерживают пагинацию через параметры:
+    - `page` - номер страницы (начиная с 1)
+    - `limit` - количество элементов на странице (максимум 100)
+    
+    ## Коды ответов
+    - `200` - Успешно
+    - `201` - Создано
+    - `400` - Ошибка валидации
+    - `401` - Не авторизован
+    - `403` - Доступ запрещён
+    - `404` - Не найдено
+    - `500` - Внутренняя ошибка сервера
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@corporate-ideas.com
+
+servers:
+  - url: /praktica_popov/api/v1
+    description: Local development server
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Вход в систему
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: "john_doe"
+                password:
+                  type: string
+                  format: password
+                  example: "password123"
+      responses:
+        '200':
+          description: Успешная авторизация
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Неверные учётные данные
+          
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Регистрация нового пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+                - confirm_password
+              properties:
+                username:
+                  type: string
+                  minLength: 3
+                  maxLength: 50
+                  example: "john_doe"
+                password:
+                  type: string
+                  minLength: 6
+                  format: password
+                  example: "password123"
+                confirm_password:
+                  type: string
+                  format: password
+                  example: "password123"
+      responses:
+        '201':
+          description: Пользователь зарегистрирован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+
+  /ideas:
+    get:
+      tags:
+        - Ideas
+      summary: Получить список идей
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, approved, rejected]
+          description: Фильтр по статусу
+        - name: category
+          in: query
+          schema:
+            type: string
+          description: Фильтр по категории
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Поиск по тексту
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum: [created_at, likes_count, popularity_rank, title]
+            default: created_at
+        - name: sort_order
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        '200':
+          description: Список идей
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdeasListResponse'
+                
+    post:
+      tags:
+        - Ideas
+      summary: Создать новую идею
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateIdeaRequest'
+      responses:
+        '201':
+          description: Идея создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdeaResponse'
+
+  /ideas/{id}:
+    get:
+      tags:
+        - Ideas
+      summary: Получить идею по ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Данные идеи
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdeaDetailResponse'
+                
+    put:
+      tags:
+        - Ideas
+      summary: Обновить идею
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateIdeaRequest'
+      responses:
+        '200':
+          description: Идея обновлена
+          
+    delete:
+      tags:
+        - Ideas
+      summary: Удалить идею
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Идея удалена
+
+  /ideas/top:
+    get:
+      tags:
+        - Ideas
+      summary: Получить топ идеи
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [week, month, year, all]
+            default: month
+          description: Период для топ идей
+      responses:
+        '200':
+          description: Топ идеи
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdeasListResponse'
+
+  /ideas/my:
+    get:
+      tags:
+        - Ideas
+      summary: Получить мои идеи
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Мои идеи
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdeasListResponse'
+
+  /ideas/{id}/vote:
+    post:
+      tags:
+        - Voting
+      summary: Проголосовать за идею
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - vote_type
+              properties:
+                vote_type:
+                  type: string
+                  enum: [like, dislike]
+                  example: "like"
+      responses:
+        '200':
+          description: Голос учтён
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoteResponse'
+                
+    delete:
+      tags:
+        - Voting
+      summary: Отменить голос
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Голос отменён
+
+  /ideas/{id}/votes:
+    get:
+      tags:
+        - Voting
+      summary: Получить статистику голосов
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Статистика голосов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoteStatsResponse'
+
+  /users/profile:
+    get:
+      tags:
+        - Users
+      summary: Получить профиль текущего пользователя
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Данные профиля
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+                
+    put:
+      tags:
+        - Users
+      summary: Обновить профиль
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  minLength: 3
+                  maxLength: 50
+                password:
+                  type: string
+                  minLength: 6
+      responses:
+        '200':
+          description: Профиль обновлён
+
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Получить публичную информацию о пользователе
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Информация о пользователе
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfoResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+      description: ID ресурса
+      
+    PageParam:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      description: Номер страницы
+      
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+      description: Количество элементов на странице
+
+  schemas:
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Авторизация успешна"
+        data:
+          type: object
+          properties:
+            token:
+              type: string
+              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            user:
+              $ref: '#/components/schemas/User'
+              
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "john_doe"
+        role:
+          type: string
+          enum: [user, admin]
+          example: "user"
+          
+    CreateIdeaRequest:
+      type: object
+      required:
+        - title
+        - description
+        - category
+      properties:
+        title:
+          type: string
+          minLength: 5
+          maxLength: 200
+          example: "Улучшение процесса онбординга"
+        description:
+          type: string
+          minLength: 10
+          maxLength: 5000
+          example: "Предлагаю создать интерактивную платформу для новых сотрудников..."
+        category:
+          type: string
+          enum: ["Технологии", "Процессы", "Продукты", "HR", "Другое"]
+          example: "HR"
+          
+    UpdateIdeaRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 5
+          maxLength: 200
+        description:
+          type: string
+          minLength: 10
+          maxLength: 5000
+        category:
+          type: string
+          enum: ["Технологии", "Процессы", "Продукты", "HR", "Другое"]
+          
+    Idea:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Улучшение процесса онбординга"
+        description:
+          type: string
+          example: "Предлагаю создать интерактивную платформу..."
+        category:
+          type: string
+          example: "HR"
+        status:
+          type: string
+          enum: [pending, approved, rejected]
+          example: "pending"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        likes_count:
+          type: integer
+          example: 15
+        dislikes_count:
+          type: integer
+          example: 2
+        popularity_rank:
+          type: number
+          format: float
+          example: 8.5
+        author_name:
+          type: string
+          example: "john_doe"
+        author_id:
+          type: integer
+          example: 1
+          
+    IdeaResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Идея создана успешно"
+        data:
+          $ref: '#/components/schemas/Idea'
+          
+    IdeaDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Идея получена успешно"
+        data:
+          allOf:
+            - $ref: '#/components/schemas/Idea'
+            - type: object
+              properties:
+                user_vote:
+                  type: integer
+                  enum: [-1, 0, 1]
+                  example: 1
+                  description: "Голос пользователя: -1 (дизлайк), 0 (нет голоса), 1 (лайк)"
+          
+    IdeasListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Список идей получен успешно"
+        data:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/Idea'
+            pagination:
+              $ref: '#/components/schemas/Pagination'
+              
+    Pagination:
+      type: object
+      properties:
+        current_page:
+          type: integer
+          example: 1
+        per_page:
+          type: integer
+          example: 20
+        total:
+          type: integer
+          example: 150
+        total_pages:
+          type: integer
+          example: 8
+        has_next:
+          type: boolean
+          example: true
+        has_prev:
+          type: boolean
+          example: false
+          
+    VoteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Голос добавлен успешно"
+        data:
+          type: object
+          properties:
+            vote_type:
+              type: string
+              enum: [like, dislike]
+              example: "like"
+            statistics:
+              $ref: '#/components/schemas/VoteStats'
+              
+    VoteStatsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Статистика голосов получена успешно"
+        data:
+          allOf:
+            - $ref: '#/components/schemas/VoteStats'
+            - type: object
+              properties:
+                user_vote:
+                  type: string
+                  nullable: true
+                  enum: [like, dislike]
+                  example: "like"
+          
+    VoteStats:
+      type: object
+      properties:
+        likes_count:
+          type: integer
+          example: 15
+        dislikes_count:
+          type: integer
+          example: 2
+        total_votes:
+          type: integer
+          example: 17
+        popularity_rank:
+          type: number
+          format: float
+          example: 8.5
+        like_percentage:
+          type: number
+          format: float
+          example: 88.24
+          
+    UserProfileResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Профиль получен успешно"
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            username:
+              type: string
+              example: "john_doe"
+            role:
+              type: string
+              example: "user"
+            created_at:
+              type: string
+              format: date-time
+              example: "2024-01-01T12:00:00Z"
+            ideas_count:
+              type: integer
+              example: 5
+            votes_count:
+              type: integer
+              example: 23
+              
+    UserInfoResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Информация о пользователе получена успешно"
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            username:
+              type: string
+              example: "john_doe"
+            created_at:
+              type: string
+              format: date-time
+              example: "2024-01-01T12:00:00Z"
+            ideas_count:
+              type: integer
+              example: 5
+            votes_count:
+              type: integer
+              example: 23
+            total_likes_received:
+              type: integer
+              example: 47
+            recent_ideas:
+              type: array
+              items:
+                $ref: '#/components/schemas/Idea'
+                
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "VALIDATION_ERROR"
+            message:
+              type: string
+              example: "Ошибка валидации данных"
+            details:
+              type: object
+              additionalProperties: true

@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/contacts.css">
+    <link rel="stylesheet" href="../css/burger-menu.css">
+    <link rel="stylesheet" href="../css/fixes.css">
+    <link rel="stylesheet" href="../css/modern-pages.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>Контакты - Система предложений</title>
+</head>
+<body>
+    <!-- Современный хедер -->
+    <header class="modern-header animate-fade-in-down">
+        <div class="header-container">
+            <div class="logo-section">
+                <img src="../image/logo.png" alt="StaffVoice Logo" class="logo-img">
+                <span class="logo-text">StaffVoice</span>
+            </div>
+            
+            <nav class="nav-links desktop-nav">
+                <a href="../index.html" class="nav-link hover-lift">Главная</a>
+                <a href="about.html" class="nav-link hover-lift">О нас</a>
+                <a href="contacts.html" class="nav-link active">Контакты</a>
+                <a href="login.html" class="nav-link hover-lift">Войти</a>
+            </nav>
+            
+            <div class="burger-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <div class="mobile-menu" id="mobileMenu">
+                <div class="mobile-menu-content">
+                    <a href="../index.html" onclick="closeMobileMenu()">Главная</a>
+                    <a href="about.html" onclick="closeMobileMenu()">О нас</a>
+                    <a href="contacts.html" onclick="closeMobileMenu()">Контакты</a>
+                    <a href="login.html" onclick="closeMobileMenu()">Вход</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero секция -->
+    <section class="hero-section animate-fade-in-up">
+        <div class="hero-container">
+            <h1 class="hero-title">Свяжитесь с нами</h1>
+            <p class="hero-subtitle">Мы всегда готовы помочь и ответить на ваши вопросы</p>
+        </div>
+    </section>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+        <div class="content-container">
+            
+            <!-- Контактная информация -->
+            <section class="contact-info-section animate-fade-in-left">
+                <div class="contact-cards">
+                    <div class="contact-card hover-lift">
+                        <div class="contact-icon">📧</div>
+                        <h3>Email</h3>
+                        <p>teamJS@yandex.ru</p>
+                        <a href="mailto:teamJS@yandex.ru" class="contact-link">Написать письмо</a>
+                    </div>
+                    
+                    <div class="contact-card hover-lift">
+                        <div class="contact-icon">📱</div>
+                        <h3>Телефон</h3>
+                        <p>+7 (800) 555-35-55</p>
+                        <a href="tel:+78005553555" class="contact-link">Позвонить</a>
+                    </div>
+                    
+                    <div class="contact-card hover-lift">
+                        <div class="contact-icon">🕒</div>
+                        <h3>Время работы</h3>
+                        <p>Пн-Пт: 9:00 - 18:00</p>
+                        <p>Сб-Вс: выходной</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Форма обратной связи -->
+            <section class="contact-form-section animate-fade-in-right">
+                <div class="form-container">
+                    <h2>Форма обратной связи</h2>
+                    <p class="form-description">Опишите вашу проблему или задайте вопрос, и мы обязательно ответим</p>
+                    
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Ваше имя</label>
+                                <input type="text" id="name" name="name" placeholder="Введите ваше имя" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Тема обращения</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Выберите тему</option>
+                                <option value="technical">Техническая проблема</option>
+                                <option value="question">Общий вопрос</option>
+                                <option value="suggestion">Предложение</option>
+                                <option value="other">Другое</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Сообщение</label>
+                            <textarea id="message" name="message" rows="5" placeholder="Опишите вашу проблему или вопрос..." required></textarea>
+                        </div>
+                        
+                        <!-- Современная загрузка файлов -->
+                        <div class="form-group">
+                            <label>Прикрепить файлы (необязательно)</label>
+                            <div class="file-upload-area" data-file-upload='{"maxFiles": 3, "maxFileSize": 5242880}'></div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-large btn-animated hover-lift">
+                            <span class="btn-text">Отправить сообщение</span>
+                            <div class="spinner" style="display: none;"></div>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Карта -->
+            <section class="map-section animate-fade-in-up">
+                <div class="map-container">
+                    <h2>Наше местоположение</h2>
+                    <div class="map-wrapper">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2288.8883420202305!2d73.3717125979218!3d54.99259165132847!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sru!2sru!4v1758084795449!5m2!1sru!2sru"
+                            allowfullscreen="" 
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="Наше местоположение на карте">
+                        </iframe>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+    
+    <!-- Подключаем скрипты -->
+    <script src="../js/realtime.js"></script>
+    <script src="../js/file-upload.js"></script>
+    <script src="../js/ui-fixes.js"></script>
+    <script src="../js/burger-menu.js"></script>
+
+    <script>
+    // Инициализация страницы контактов
+    document.addEventListener('DOMContentLoaded', function() {
+        // Инициализация drag & drop для файлов
+        window.fileUploadManager = new DragDropFileUpload({
+            container: '.file-upload-area',
+            maxFiles: 3,
+            maxFileSize: 5 * 1024 * 1024, // 5MB
+            acceptedTypes: ['image/*', 'application/pdf', '.doc', '.docx', '.txt'],
+            onSuccess: (response, file) => {
+                window.toastManager.success(`Файл "${file.name}" прикреплен`);
+            },
+            onError: (error, file) => {
+                window.toastManager.error(`Ошибка: ${error.message}`);
+            }
+        });
+
+        // Обработка отправки формы
+        const form = document.getElementById('contactForm');
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            window.loadingManager.show(submitBtn, 'spinner');
+            
+            try {
+                // Имитация отправки (здесь будет реальная отправка)
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                window.toastManager.success('Сообщение отправлено! Мы свяжемся с вами в ближайшее время.');
+                form.reset();
+                window.fileUploadManager.reset();
+                
+            } catch (error) {
+                window.toastManager.error('Ошибка при отправке сообщения: ' + error.message);
+            } finally {
+                window.loadingManager.hide(submitBtn);
+            }
+        });
+
+        // Анимация элементов при прокрутке
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Наблюдаем за секциями
+        document.querySelectorAll('.contact-info-section, .contact-form-section, .map-section').forEach(section => {
+            observer.observe(section);
+        });
+    });
+    </script>
+</body>
+</html>

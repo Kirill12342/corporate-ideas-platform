@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/idea.css">
+    <link rel="stylesheet" href="../css/burger-menu.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/fixes.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>Новая идея - Система предложений</title>
+</head>
+<body>
+    <div class="mobile-nav">
+        <div class="burger-btn" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-menu-content">
+                <a href="../index.html" onclick="closeMobileMenu()">Главная</a>
+                <a href="contacts.html" onclick="closeMobileMenu()">Контакты</a>
+                <a href="about.html" onclick="closeMobileMenu()">О нас</a>
+                <a href="user.php" onclick="closeMobileMenu()">Мои идеи</a>
+                <button onclick="window.location.href='logout.php'">Выйти</button>
+            </div>
+        </div>
+    </div>
+
+    <form id="ideaForm" action="submit_idea.php" method="POST" enctype="multipart/form-data" class="conteiner">
+        <div class="image">
+            <img src="../image/logo2.png" alt="">
+        </div>
+        <div class="inputs">
+            <p>Идея</p>
+            <input type="text" name="title" id="idea-title" required>
+            <p>Описание</p>
+            <textarea id="input_big" name="description" required></textarea>
+        </div>
+        <div class="kategori-btn">
+            <div class="btn_kategori">
+                <p>Категория</p>
+                <select name="category" id="category-select" required>
+                    <option value="">Выберите категорию</option>
+                    <option value="Рабочие процессы">Рабочие процессы</option>
+                    <option value="Офис">Офис</option>
+                    <option value="IT-сервисы">IT-сервисы</option>
+                    <option value="HR">HR</option>
+                    <option value="Финансы">Финансы</option>
+                    <option value="Другое">Другое</option>
+                </select>
+            </div>
+            <div class="kategori_pril">
+                <p>Файловые вложения (необязательно)</p>
+                <!-- Новый современный drag & drop компонент -->
+                <div class="file-upload-area" data-file-upload='{"maxFiles": 5, "maxFileSize": 10485760, "entityType": "idea"}'></div>
+            </div>
+        </div>
+        <div class="button_otpr">
+            <button type="submit" class="btn btn-primary btn-animated">
+                <span class="btn-text">Отправить идею</span>
+                <div class="spinner" style="display: none;"></div>
+            </button>
+        </div>
+        <div class="back_button">
+            <button type="button" class="btn btn-secondary btn-animated hover-lift" onclick="history.back()">Назад</button>
+        </div>
+    </form>
+
+    <!-- Уведомления -->
+    <div class="notification-count" style="display: none;">0</div>
+
+    <!-- Подключаем все новые скрипты -->
+    <script src="../js/realtime.js?v=1.2"></script>
+    <script src="../js/file-upload.js?v=1.2"></script>
+    <script src="../js/ui-fixes.js?v=1.2"></script>
+    <script src="../js/idea.js?v=1.2"></script>
+    <script src="../js/burger-menu.js?v=1.2"></script>
+
+    <script>
+    // Инициализация после загрузки страницы
+    document.addEventListener('DOMContentLoaded', function() {
+        // Инициализация drag & drop для загрузки файлов
+        window.fileUploadManager = new DragDropFileUpload({
+            container: '.file-upload-area',
+            maxFiles: 5,
+            maxFileSize: 10 * 1024 * 1024, // 10MB
+            entityType: 'idea',
+            acceptedTypes: ['image/*', 'application/pdf', '.doc', '.docx', '.txt'],
+            onSuccess: (response, file) => {
+                window.toastManager.success(`Файл "${file.name}" загружен успешно`);
+            },
+            onError: (error, file) => {
+                window.toastManager.error(`Ошибка загрузки "${file.name}": ${error.message}`);
+            }
+        });
+
+        // Обработка отправки формы с интеграцией загрузки файлов
+        const form = document.getElementById('ideaForm');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Показываем индикатор загрузки на кнопке
+            if (window.loadingManager) {
+                window.loadingManager.show(submitBtn, 'spinner');
+            }
+            
+            try {
+                // Получаем данные формы
+                const formData = new FormData(form);
+                
+                // Добавляем загруженные файлы если они есть
+                const uploadedFiles = window.fileUploadManager?.getUploadedFiles() || [];
+                uploadedFiles.forEach((fileData, index) => {
+                    formData.append(`attachment_ids[]`, fileData.data.id);
+                });
+                
+                // Отправляем через стандартный PHP endpoint
+                const response = await fetch('submit_idea.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.text();
+                
+                // Проверяем результат (может быть JSON или HTML с redirect)
+                if (result.includes('success') || result.includes('успешно')) {
+                    // Показываем успех
+                    if (window.toastManager) {
+                        window.toastManager.success('Идея успешно отправлена!');
+                    } else {
+                        alert('Идея успешно отправлена!');
+                    }
+                    
+                    // Перенаправляем на страницу с идеями
+                    setTimeout(() => {
+                        window.location.href = 'user.php';
+                    }, 1500);
+                } else {
+                    throw new Error('Ошибка при сохранении идеи');
+                }
+                
+            } catch (error) {
+                console.error('Ошибка отправки формы:', error);
+                if (window.toastManager) {
+                    window.toastManager.error('Ошибка при отправке идеи: ' + error.message);
+                } else {
+                    alert('Ошибка при отправке идеи: ' + error.message);
+                }
+            } finally {
+                if (window.loadingManager) {
+                    window.loadingManager.hide(submitBtn);
+                }
+            }
+        });
+
+        // Добавляем анимации к элементам формы
+        const inputs = document.querySelectorAll('input, textarea, select');
+        inputs.forEach((input, index) => {
+            input.classList.add('animate-fade-in-up');
+            input.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        // Подключение к real-time уведомлениям
+        if (localStorage.getItem('api_token')) {
+            window.realtimeNotifications.connect();
+        }
+    });
+    </script>
+</body>
+</html>
