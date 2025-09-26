@@ -165,7 +165,12 @@
                                     if ($shown >= 3) break;
                                     $isImage = strpos($attachment['file_type'], 'image/') === 0;
                                 ?>
-                                    <div class="attachment-thumb">
+                                    <div class="attachment-thumb" 
+                                         <?php if ($isImage): ?>
+                                         onclick="openImageModal('view_image.php?id=<?= $attachment['id'] ?>', '<?= htmlspecialchars($attachment['original_name']) ?>')"
+                                         <?php else: ?>
+                                         onclick="downloadFile(<?= $attachment['id'] ?>, '<?= htmlspecialchars($attachment['original_name']) ?>')"
+                                         <?php endif; ?>>
                                         <?php if ($isImage): ?>
                                             <img src="view_image.php?id=<?= $attachment['id'] ?>" 
                                                  alt="<?= htmlspecialchars($attachment['original_name']) ?>"
@@ -244,9 +249,68 @@
         </div>
     </div>
 
+    <!-- Модальное окно для просмотра изображений -->
+    <div class="image-modal" id="image-modal">
+        <div class="image-modal-content">
+            <button class="image-modal-close" onclick="closeImageModal()">×</button>
+            <img class="image-modal-img" id="modal-image" src="" alt="">
+            <div class="image-modal-info" id="modal-image-info">
+                <!-- Информация об изображении -->
+            </div>
+        </div>
+    </div>
 
     <script src="../js/admin.js"></script>
     <script src="../js/burger-menu.js"></script>
+    
+    <script>
+        // === ФУНКЦИИ ДЛЯ МОДАЛЬНОГО ОКНА ИЗОБРАЖЕНИЙ ===
+        function openImageModal(imageSrc, fileName, fileSize) {
+            const modal = document.getElementById('image-modal');
+            const modalImage = document.getElementById('modal-image');
+            const modalInfo = document.getElementById('modal-image-info');
+            
+            modalImage.src = imageSrc;
+            modalImage.alt = fileName;
+            modalInfo.innerHTML = `
+                <strong>${fileName}</strong><br>
+                Размер: ${Math.round(fileSize / 1024)} KB
+            `;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('image-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Закрытие модального окна при клике на фон
+        document.getElementById('image-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImageModal();
+            }
+        });
+
+        // Закрытие модального окна по Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+
+        // Функция для скачивания файлов
+        function downloadFile(attachmentId, fileName) {
+            const link = document.createElement('a');
+            link.href = 'download_file.php?id=' + attachmentId;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
     
 </body>
 </html>

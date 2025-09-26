@@ -172,6 +172,13 @@ try {
             $idea = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($idea) {
+                // Получаем вложения для этой идеи
+                $stmt = $pdo->prepare("SELECT * FROM idea_attachments WHERE idea_id = ? ORDER BY created_at");
+                $stmt->execute([$ideaId]);
+                $attachments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+                $idea['attachments'] = $attachments;
+                
                 $response = [
                     'success' => true,
                     'data' => $idea

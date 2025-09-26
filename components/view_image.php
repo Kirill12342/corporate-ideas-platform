@@ -32,7 +32,7 @@ try {
     
     // Проверяем права доступа
     $user_id = $_SESSION['user_id'];
-    $user_role = $_SESSION['role'] ?? 'user';
+    $user_role = $_SESSION['user_role'] ?? 'user';
     
     // Админы могут просматривать все файлы, пользователи - только свои
     if ($user_role !== 'admin' && $attachment['user_id'] != $user_id) {
