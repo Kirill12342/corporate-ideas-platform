@@ -18,6 +18,40 @@ class AdminDashboard {
         this.setupRefreshInterval();
     }
 
+    // Добавляем метод для полной очистки всех графиков
+    destroyAllCharts() {
+        // Уничтожаем все существующие графики Chart.js
+        if (window.Chart && window.Chart.instances) {
+            // Получаем все экземпляры Chart.js и уничтожаем их
+            const instances = Object.values(window.Chart.instances);
+            instances.forEach(chart => {
+                if (chart && typeof chart.destroy === 'function') {
+                    chart.destroy();
+                }
+            });
+        }
+
+        // Очищаем наш локальный объект графиков
+        Object.keys(this.charts).forEach(key => {
+            if (this.charts[key] && typeof this.charts[key].destroy === 'function') {
+                this.charts[key].destroy();
+            }
+            this.charts[key] = null;
+        });
+
+        // Очищаем canvas элементы
+        const canvasElements = ['ideas-timeline-chart', 'categories-chart', 'ideas-status-chart', 'departments-chart'];
+        canvasElements.forEach(id => {
+            const canvas = document.getElementById(id);
+            if (canvas) {
+                const context = canvas.getContext('2d');
+                if (context) {
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+        });
+    }
+
     setupNavigation() {
         const navItems = document.querySelectorAll('.nav-item');
         navItems.forEach(item => {
@@ -30,6 +64,9 @@ class AdminDashboard {
     }
 
     switchSection(sectionName) {
+        // Уничтожаем все графики перед переключением секции
+        this.destroyAllCharts();
+
         // Скрываем все секции
         document.querySelectorAll('.dashboard-section').forEach(section => {
             section.style.display = 'none';
@@ -45,12 +82,14 @@ class AdminDashboard {
         document.querySelectorAll('.nav-item').forEach(item => {
             item.classList.remove('active');
         });
-        document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
+        document.querySelector(`[data-section="${sectionName}"]`)?.classList.add('active');
 
         this.currentSection = sectionName;
 
-        // Загружаем данные для секции
-        this.loadSectionData(sectionName);
+        // Загружаем данные для секции с небольшой задержкой
+        setTimeout(() => {
+            this.loadSectionData(sectionName);
+        }, 100);
     }
 
     async loadSectionData(section) {
@@ -134,6 +173,28 @@ class AdminDashboard {
         const ctx = document.getElementById('ideas-timeline-chart');
         if (!ctx) return;
 
+        // Получаем 2D контекст для очистки
+        const context = ctx.getContext('2d');
+
+        // Принудительно уничтожаем любой существующий график на этом canvas
+        if (window.Chart && window.Chart.instances) {
+            Object.values(window.Chart.instances).forEach(instance => {
+                if (instance.canvas === ctx) {
+                    instance.destroy();
+                }
+            });
+        }
+
+        // Очищаем canvas
+        if (context) {
+            context.clearRect(0, 0, ctx.width, ctx.height);
+        }
+
+        // Уничтожаем наш локальный экземпляр
+        if (this.charts.timeline) {
+            this.charts.timeline.destroy();
+        }
+
         // Группируем данные по датам и статусам
         const dates = [...new Set(timelineData.map(item => item.period))].sort();
         const statuses = [...new Set(timelineData.map(item => item.status))];
@@ -152,31 +213,31 @@ class AdminDashboard {
             };
         });
 
-        if (this.charts.timeline) {
-            this.charts.timeline.destroy();
-        }
-
-        this.charts.timeline = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: dates,
-                datasets: datasets
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Динамика подачи идей'
-                    }
+        try {
+            this.charts.timeline = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: datasets
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Динамика подачи идей'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (error) {
+            console.error('Ошибка создания графика динамики:', error);
+        }
     }
 
     async loadCategoriesChart() {
@@ -193,6 +254,63 @@ class AdminDashboard {
             }
         } catch (error) {
             console.error('Ошибка загрузки графика категорий:', error);
+        }
+    }
+
+    createCategoriesChart(categories) {
+        const ctx = document.getElementById('categories-chart');
+        if (!ctx) return;
+
+        // Получаем 2D контекст для очистки
+        const context = ctx.getContext('2d');
+
+        // Принудительно уничтожаем любой существующий график на этом canvas
+        if (window.Chart && window.Chart.instances) {
+            Object.values(window.Chart.instances).forEach(instance => {
+                if (instance.canvas === ctx) {
+                    instance.destroy();
+                }
+            });
+        }
+
+        // Очищаем canvas
+        if (context) {
+            context.clearRect(0, 0, ctx.width, ctx.height);
+        }
+
+        // Уничтожаем наш локальный экземпляр
+        if (this.charts.categories) {
+            this.charts.categories.destroy();
+        }
+
+        try {
+            this.charts.categories = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: categories.map(cat => cat.category),
+                    datasets: [{
+                        data: categories.map(cat => cat.count),
+                        backgroundColor: [
+                            '#3498db', '#e74c3c', '#f39c12', '#27ae60',
+                            '#9b59b6', '#1abc9c', '#34495e', '#f1c40f'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Распределение по категориям'
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Ошибка создания графика категорий:', error);
         }
     }
 
@@ -213,45 +331,28 @@ class AdminDashboard {
         }
     }
 
-    createCategoriesChart(categories) {
-        const ctx = document.getElementById('categories-chart');
-        if (!ctx) return;
-
-        if (this.charts.categories) {
-            this.charts.categories.destroy();
-        }
-
-        this.charts.categories = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: categories.map(cat => cat.category),
-                datasets: [{
-                    data: categories.map(cat => cat.count),
-                    backgroundColor: [
-                        '#3498db', '#e74c3c', '#f39c12', '#27ae60',
-                        '#9b59b6', '#1abc9c', '#34495e', '#f1c40f'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Распределение по категориям'
-                    },
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
-    }
-
     createStatusChart(statuses) {
         const ctx = document.getElementById('ideas-status-chart');
         if (!ctx) return;
 
+        // Получаем 2D контекст для очистки
+        const context = ctx.getContext('2d');
+
+        // Принудительно уничтожаем любой существующий график на этом canvas
+        if (window.Chart && window.Chart.instances) {
+            Object.values(window.Chart.instances).forEach(instance => {
+                if (instance.canvas === ctx) {
+                    instance.destroy();
+                }
+            });
+        }
+
+        // Очищаем canvas
+        if (context) {
+            context.clearRect(0, 0, ctx.width, ctx.height);
+        }
+
+        // Уничтожаем наш локальный экземпляр
         if (this.charts.status) {
             this.charts.status.destroy();
         }
@@ -263,28 +364,32 @@ class AdminDashboard {
             'Отклонено': '#e74c3c'
         };
 
-        this.charts.status = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: statuses.map(s => s.status),
-                datasets: [{
-                    data: statuses.map(s => s.count),
-                    backgroundColor: statuses.map(s => colors[s.status] || '#95a5a6')
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Статусы идей'
-                    },
-                    legend: {
-                        position: 'bottom'
+        try {
+            this.charts.status = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: statuses.map(s => s.status),
+                    datasets: [{
+                        data: statuses.map(s => s.count),
+                        backgroundColor: statuses.map(s => colors[s.status] || '#95a5a6')
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Статусы идей'
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (error) {
+            console.error('Ошибка создания графика статусов:', error);
+        }
     }
 
     updateStatsCards(stats) {
