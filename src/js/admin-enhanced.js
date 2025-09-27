@@ -73,6 +73,12 @@ class AdminDashboard {
         }
     }
 
+    async loadIdeasData() {
+        // Заглушка для загрузки данных идей - используем существующий функционал из dashboard.js
+        console.log('Загрузка данных идей...');
+        // Здесь может быть логика загрузки идей, если необходимо
+    }
+
     async loadDashboardData() {
         try {
             const response = await fetch('admin_analytics.php', {
@@ -167,6 +173,114 @@ class AdminDashboard {
                 scales: {
                     y: {
                         beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    async loadCategoriesChart() {
+        try {
+            const response = await fetch('admin_analytics.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'get_categories_stats' })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                this.createCategoriesChart(data.data);
+            }
+        } catch (error) {
+            console.error('Ошибка загрузки графика категорий:', error);
+        }
+    }
+
+    async loadStatusChart() {
+        try {
+            const response = await fetch('admin_analytics.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'get_status_distribution' })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                this.createStatusChart(data.data);
+            }
+        } catch (error) {
+            console.error('Ошибка загрузки графика статусов:', error);
+        }
+    }
+
+    createCategoriesChart(categories) {
+        const ctx = document.getElementById('categories-chart');
+        if (!ctx) return;
+
+        if (this.charts.categories) {
+            this.charts.categories.destroy();
+        }
+
+        this.charts.categories = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: categories.map(cat => cat.category),
+                datasets: [{
+                    data: categories.map(cat => cat.count),
+                    backgroundColor: [
+                        '#3498db', '#e74c3c', '#f39c12', '#27ae60',
+                        '#9b59b6', '#1abc9c', '#34495e', '#f1c40f'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Распределение по категориям'
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+
+    createStatusChart(statuses) {
+        const ctx = document.getElementById('ideas-status-chart');
+        if (!ctx) return;
+
+        if (this.charts.status) {
+            this.charts.status.destroy();
+        }
+
+        const colors = {
+            'На рассмотрении': '#f39c12',
+            'В работе': '#3498db',
+            'Принято': '#27ae60',
+            'Отклонено': '#e74c3c'
+        };
+
+        this.charts.status = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: statuses.map(s => s.status),
+                datasets: [{
+                    data: statuses.map(s => s.count),
+                    backgroundColor: statuses.map(s => colors[s.status] || '#95a5a6')
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Статусы идей'
+                    },
+                    legend: {
+                        position: 'bottom'
                     }
                 }
             }
@@ -564,6 +678,83 @@ class UsersManager {
                 window.dashboard.showNotification('Ошибка: ' + error.message, 'error');
             }
         }
+    }
+
+    async exportUsers() {
+        try {
+            const response = await fetch('admin_users.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'export_users',
+                    format: 'csv'
+                })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                // Создаем скрытую ссылку для скачивания
+                const link = document.createElement('a');
+                link.href = data.file_url;
+                link.download = `users_export_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                window.dashboard.showNotification('Список пользователей успешно экспортирован', 'success');
+            } else {
+                window.dashboard.showNotification('Ошибка экспорта: ' + data.error, 'error');
+            }
+        } catch (error) {
+            window.dashboard.showNotification('Ошибка: ' + error.message, 'error');
+        }
+    }
+
+    renderPagination(pagination) {
+        const container = document.getElementById('users-pagination');
+        if (!container) return;
+
+        let paginationHTML = '';
+
+        // Предыдущая страница
+        if (pagination.current_page > 1) {
+            paginationHTML += `<button class="page-btn" onclick="window.dashboard.users.goToPage(${pagination.current_page - 1})">‹</button>`;
+        }
+
+        // Номера страниц
+        const startPage = Math.max(1, pagination.current_page - 2);
+        const endPage = Math.min(pagination.total_pages, pagination.current_page + 2);
+
+        for (let i = startPage; i <= endPage; i++) {
+            const isActive = i === pagination.current_page ? 'active' : '';
+            paginationHTML += `<button class="page-btn ${isActive}" onclick="window.dashboard.users.goToPage(${i})">${i}</button>`;
+        }
+
+        // Следующая страница
+        if (pagination.current_page < pagination.total_pages) {
+            paginationHTML += `<button class="page-btn" onclick="window.dashboard.users.goToPage(${pagination.current_page + 1})">›</button>`;
+        }
+
+        container.innerHTML = paginationHTML;
+    }
+
+    goToPage(page) {
+        this.currentPage = page;
+        this.loadUsers();
+    }
+
+    updateUsersStats(users) {
+        const totalUsersEl = document.getElementById('total-users');
+        const activeUsersEl = document.getElementById('active-users');
+        const newUsersEl = document.getElementById('new-users');
+
+        if (totalUsersEl) totalUsersEl.textContent = users.length;
+        if (activeUsersEl) activeUsersEl.textContent = users.filter(u => u.is_active).length;
+        if (newUsersEl) newUsersEl.textContent = users.filter(u => {
+            const createdDate = new Date(u.created_at);
+            const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+            return createdDate >= weekAgo;
+        }).length;
     }
 }
 

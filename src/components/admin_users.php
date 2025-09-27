@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $params = [];
 
                 if ($search) {
-                    $whereClause = "WHERE u.fullname LIKE :search OR u.email LIKE :search OR u.department LIKE :search";
+                    $whereClause = "WHERE u.fullname LIKE :search OR u.email LIKE :search OR COALESCE(u.department, '') LIKE :search";
                     $params[':search'] = "%$search%";
                 }
 
@@ -32,11 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     u.id,
                     u.fullname,
                     u.email,
-                    u.department,
-                    u.position,
+                    COALESCE(u.department, 'Не указан') as department,
+                    COALESCE(u.position, 'Не указана') as position,
                     u.created_at,
                     u.last_login,
-                    u.is_active,
+                    COALESCE(u.is_active, 1) as is_active,
                     COUNT(i.id) as ideas_count,
                     COALESCE(SUM(i.likes_count), 0) as total_likes,
                     COALESCE(SUM(i.total_score), 0) as total_score,
