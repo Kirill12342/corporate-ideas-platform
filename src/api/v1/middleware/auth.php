@@ -81,6 +81,20 @@ class JWTAuth
         return $payload;
     }
 
+    // Опциональная авторизация - возвращает данные пользователя если авторизован, или null
+    public static function getOptionalUser()
+    {
+        $headers = getallheaders();
+        $auth_header = $headers['Authorization'] ?? '';
+
+        if (!preg_match('/Bearer\s+(.*)$/i', $auth_header, $matches)) {
+            return null;
+        }
+
+        $token = $matches[1];
+        return self::validateToken($token);
+    }
+
     private static function base64url_encode($data)
     {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');

@@ -319,6 +319,163 @@ $router->addRoute('DELETE', '/notifications/{id}', function ($id) {
     $controller->deleteNotification($id);
 });
 
+// GET /notifications/settings - получение настроек уведомлений
+$router->addRoute('GET', '/notifications/settings', function () {
+    $controller = new NotificationsController();
+    $controller->getNotificationSettings();
+});
+
+// PUT /notifications/settings - обновление настроек уведомлений
+$router->addRoute('PUT', '/notifications/settings', function () {
+    $controller = new NotificationsController();
+    $controller->updateNotificationSettings();
+});
+
+// === НОВЫЕ МАРШРУТЫ ДЛЯ СОЦИАЛЬНЫХ ФУНКЦИЙ ===
+
+// Маршруты для комментариев
+require_once 'controllers/CommentsController.php';
+
+// GET /comments - получить комментарии к идее
+$router->addRoute('GET', '/comments', function () {
+    $controller = new CommentsController();
+    $controller->getComments();
+});
+
+// POST /comments - создать комментарий
+$router->addRoute('POST', '/comments', function () {
+    $controller = new CommentsController();
+    $controller->createComment();
+});
+
+// PUT /comments/(\d+) - редактировать комментарий
+$router->addRoute('PUT', '/comments/(\d+)', function ($matches) {
+    $_GET['id'] = $matches[1];
+    $controller = new CommentsController();
+    $controller->updateComment();
+});
+
+// DELETE /comments/(\d+) - удалить комментарий
+$router->addRoute('DELETE', '/comments/(\d+)', function ($matches) {
+    $_GET['id'] = $matches[1];
+    $controller = new CommentsController();
+    $controller->deleteComment();
+});
+
+// POST /comments/like - лайк/анлайк комментария
+$router->addRoute('POST', '/comments/like', function () {
+    $controller = new CommentsController();
+    $controller->toggleCommentLike();
+});
+
+// Маршруты для репутации
+require_once 'controllers/ReputationController.php';
+
+// GET /reputation - получить репутацию пользователя
+$router->addRoute('GET', '/reputation', function () {
+    $controller = new ReputationController();
+    $controller->getUserReputation();
+});
+
+// GET /reputation/leaderboard - рейтинг пользователей
+$router->addRoute('GET', '/reputation/leaderboard', function () {
+    $controller = new ReputationController();
+    $controller->getLeaderboard();
+});
+
+// GET /reputation/stats - статистика по репутации
+$router->addRoute('GET', '/reputation/stats', function () {
+    $controller = new ReputationController();
+    $controller->getReputationStats();
+});
+
+// GET /reputation/history - история репутации
+$router->addRoute('GET', '/reputation/history', function () {
+    $controller = new ReputationController();
+    $controller->getReputationHistory();
+});
+
+// POST /reputation/award - награждение баллов (админ)
+$router->addRoute('POST', '/reputation/award', function () {
+    $controller = new ReputationController();
+    $controller->awardPoints();
+});
+
+// Маршруты для челленджей
+require_once 'controllers/ChallengesController.php';
+
+// GET /challenges - получить список челленджей
+$router->addRoute('GET', '/challenges', function () {
+    $controller = new ChallengesController();
+    $controller->getChallenges();
+});
+
+// POST /challenges - создать челлендж
+$router->addRoute('POST', '/challenges', function () {
+    $controller = new ChallengesController();
+    $controller->createChallenge();
+});
+
+// POST /challenges/(\d+)/join - присоединиться к челленджу
+$router->addRoute('POST', '/challenges/(\d+)/join', function ($matches) {
+    $_GET['id'] = $matches[1];
+    $controller = new ChallengesController();
+    $controller->joinChallenge();
+});
+
+// POST /challenges/(\d+)/leave - покинуть челлендж
+$router->addRoute('POST', '/challenges/(\d+)/leave', function ($matches) {
+    $_GET['id'] = $matches[1];
+    $controller = new ChallengesController();
+    $controller->leaveChallenge();
+});
+
+// GET /challenges/(\d+)/leaderboard - лидерборд челленджа
+$router->addRoute('GET', '/challenges/(\d+)/leaderboard', function ($matches) {
+    $_GET['id'] = $matches[1];
+    $controller = new ChallengesController();
+    $controller->getChallengeLeaderboard();
+});
+
+// POST /challenges/update-progress - обновить прогресс всех челленджей
+$router->addRoute('POST', '/challenges/update-progress', function () {
+    $controller = new ChallengesController();
+    $controller->updateAllChallengeProgress();
+});
+
+// Маршруты для достижений
+require_once 'controllers/AchievementsController.php';
+
+// GET /achievements - получить достижения
+$router->addRoute('GET', '/achievements', function () {
+    $controller = new AchievementsController();
+    $controller->getAchievements();
+});
+
+// POST /achievements/check - проверить и разблокировать новые достижения
+$router->addRoute('POST', '/achievements/check', function () {
+    $controller = new AchievementsController();
+    $controller->checkAchievements();
+});
+
+// GET /achievements/leaderboard - рейтинг по достижениям
+$router->addRoute('GET', '/achievements/leaderboard', function () {
+    $controller = new AchievementsController();
+    $controller->getAchievementLeaderboard();
+});
+
+// POST /achievements - создать достижение (админ)
+$router->addRoute('POST', '/achievements', function () {
+    $controller = new AchievementsController();
+    $controller->createAchievement();
+});
+
+// GET /activities - получить ленту активности
+$router->addRoute('GET', '/activities', function () {
+    $controller = new AchievementsController();
+    $controller->getActivityFeed();
+});
+
 // === МАРШРУТЫ ДЛЯ REAL-TIME ФУНКЦИЙ ===
 require_once 'controllers/RealtimeController.php';
 
