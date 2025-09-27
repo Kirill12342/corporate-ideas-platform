@@ -6,9 +6,6 @@ require_once __DIR__ . '/../middleware/auth.php';
 require_once __DIR__ . '/../utils/response.php';
 require_once __DIR__ . '/NotificationsController.php';
 
-class ChallengesControllerp
-// Контроллер для командных челленджей и соревнований
-
 class ChallengesController
 {
     private $db;

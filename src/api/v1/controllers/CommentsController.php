@@ -6,9 +6,6 @@ require_once __DIR__ . '/../middleware/auth.php';
 require_once __DIR__ . '/../utils/response.php';
 require_once __DIR__ . '/NotificationsController.php';
 
-class CommentsControllerp
-// Контроллер для системы комментариев API
-
 class CommentsController
 {
     private $db;
