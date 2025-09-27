@@ -16,8 +16,6 @@ services:
     container_name: php
     volumes:
       - ./src:/var/www/html
-    environment:
-      - PHP_INI_SCAN_DIR=/usr/local/etc/php/conf.d
 
   db:
     image: mysql:8.0
