@@ -1,0 +1,36 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Copy project to server
+        run: |
+          rsync -avz --delete \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/opt/stuffVoice/
+
+      - name: Run Docker Compose on server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+            cd /opt/stuffVoice &&
+            docker compose pull &&
+            docker compose up -d --build
+          "
