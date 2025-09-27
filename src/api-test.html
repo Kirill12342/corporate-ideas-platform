@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - Social Functions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        button {
+            background: #007cba;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #005a87;
+        }
+        
+        .result {
+            background: #f5f5f5;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow: auto;
+        }
+        
+        .error {
+            background: #ffeeee;
+            border-color: #ff6666;
+            color: #cc0000;
+        }
+        
+        .success {
+            background: #eeffee;
+            border-color: #66ff66;
+            color: #006600;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Тестирование API социальных функций</h1>
+    
+    <div class="test-section">
+        <h3>🏆 Тестирование достижений</h3>
+        <button onclick="testGetAchievements()">GET /achievements</button>
+        <button onclick="testCheckAchievements()">POST /achievements/check</button>
+        <div id="achievements-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>⭐ Тестирование репутации</h3>
+        <button onclick="testGetReputation()">GET /reputation</button>
+        <button onclick="testGetLeaderboard()">GET /reputation/leaderboard</button>
+        <div id="reputation-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>💬 Тестирование комментариев</h3>
+        <button onclick="testGetComments()">GET /comments</button>
+        <div id="comments-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>🏅 Тестирование челленджей</h3>
+        <button onclick="testGetChallenges()">GET /challenges</button>
+        <div id="challenges-result" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = '/praktica_popov/api/v1';
+        
+        async function apiRequest(endpoint, options = {}) {
+            const url = `${API_BASE}${endpoint}`;
+            console.log(`Making request to: ${url}`);
+            
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                
+                const text = await response.text();
+                let data;
+                
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    data = { rawResponse: text };
+                }
+                
+                return {
+                    status: response.status,
+                    ok: response.ok,
+                    data: data
+                };
+            } catch (error) {
+                return {
+                    status: 0,
+                    ok: false,
+                    error: error.message
+                };
+            }
+        }
+        
+        function displayResult(elementId, result) {
+            const element = document.getElementById(elementId);
+            
+            if (result.ok) {
+                element.className = 'result success';
+                element.textContent = `✅ Успех (${result.status}):\n${JSON.stringify(result.data, null, 2)}`;
+            } else {
+                element.className = 'result error';
+                element.textContent = `❌ Ошибка (${result.status}):\n${result.error || JSON.stringify(result.data, null, 2)}`;
+            }
+        }
+        
+        async function testGetAchievements() {
+            const result = await apiRequest('/achievements');
+            displayResult('achievements-result', result);
+        }
+        
+        async function testCheckAchievements() {
+            const result = await apiRequest('/achievements/check', {
+                method: 'POST'
+            });
+            displayResult('achievements-result', result);
+        }
+        
+        async function testGetReputation() {
+            const result = await apiRequest('/reputation');
+            displayResult('reputation-result', result);
+        }
+        
+        async function testGetLeaderboard() {
+            const result = await apiRequest('/reputation/leaderboard');
+            displayResult('reputation-result', result);
+        }
+        
+        async function testGetComments() {
+            const result = await apiRequest('/comments?idea_id=1');
+            displayResult('comments-result', result);
+        }
+        
+        async function testGetChallenges() {
+            const result = await apiRequest('/challenges');
+            displayResult('challenges-result', result);
+        }
+        
+        // Проверим доступность API при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('API Test Page loaded');
+            console.log('API Base URL:', API_BASE);
+        });
+    </script>
+</body>
+</html>
